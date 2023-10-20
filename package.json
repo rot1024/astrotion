@@ -12,8 +12,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint .",
-    "format": "prettier --write .",
+    "lint": "eslint . --fix",
+    "format": "prettier . --write",
     "typecheck": "tsc"
   },
   "dependencies": {
