@@ -1,0 +1,30 @@
+{
+  "name": "astrotion",
+  "type": "module",
+  "version": "0.0.1",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "astro": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "eslint": "^8.51.0",
+    "eslint-config-reearth": "^0.2.4",
+    "eslint-plugin-astro": "^0.29.1",
+    "eslint-plugin-disable": "^2.0.3",
+    "prettier": "^3.0.3",
+    "prettier-plugin-astro": "^0.12.0",
+    "typescript": "^5.2.2"
+  }
+}

@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: lts
+      - name: Install packages
+        run: npm ci
+      - name: Run lint
+        run: npm run lint
+      - name: Run format
+        run: npm run format
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: format by GitHub Actions"
+      - name: Run typecheck
+        run: npm run typecheck
