@@ -1,0 +1,32 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import client from "../../notion";
+
+const { slug } = Astro.params;
+
+export async function getStaticPaths() {
+  const posts = await client.getAllPosts();
+  return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
+}
+
+const post = await client.getPostBySlug(slug);
+if (!post) throw new Error(`Post not found: ${slug}`);
+const content = post ? client.getPostContent(post.id) : Promise.resolve("");
+---
+
+<Layout title={slug || ""}>
+  <h1>{post.title}</h1>
+  <main set:html={content} />
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: white;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>
