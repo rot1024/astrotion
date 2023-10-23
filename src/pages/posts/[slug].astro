@@ -11,12 +11,14 @@ export async function getStaticPaths() {
 
 const post = await client.getPostBySlug(slug);
 if (!post) throw new Error(`Post not found: ${slug}`);
-const content = post ? client.getPostContent(post.id) : Promise.resolve("");
+
+const content = post ? await client.getPostContent(post.id) : undefined;
+await client.downloadImages(content?.images);
 ---
 
 <Layout title={slug || ""}>
   <h1>{post.title}</h1>
-  <main set:html={content} />
+  <main set:html={content?.html} />
 </Layout>
 
 <style>

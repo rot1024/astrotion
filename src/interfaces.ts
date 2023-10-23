@@ -2,7 +2,12 @@ export type Client = {
   getAllPosts(): Promise<Post[]>;
   getPostById(postId: string): Promise<Post>;
   getPostBySlug(slug: string): Promise<Post>;
-  getPostContent(postId: string): Promise<string>;
+  getPostContent(postId: string): Promise<PostContent>;
+};
+
+export type PostContent = {
+  html: string;
+  images?: Map<string, string>;
 };
 
 export type Post = {

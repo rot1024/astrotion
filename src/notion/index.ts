@@ -20,7 +20,7 @@ const cacheClient = new CacheClient({
   debug: !!DEBUG,
 });
 
-const defaultClient = new Client(cacheClient, DATABASE_ID);
+const defaultClient = new Client(cacheClient, DATABASE_ID, !!DEBUG);
 
 let inited = false;
 

@@ -15,10 +15,12 @@
     "test": "vitest",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "postinstall": "symlink-dir .astro/.astrotion/assets public/assets"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.13",
+    "@supercharge/promise-pool": "^3.1.0",
     "astro": "^3.3.2",
     "async-retry": "^1.3.3",
     "notion-to-md": "^3.1.1",
@@ -26,6 +28,7 @@
     "remark-gfm": "^4.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.0.0",
+    "sharp": "^0.32.6",
     "unified": "^11.0.3"
   },
   "devDependencies": {
@@ -37,6 +40,7 @@
     "eslint-plugin-disable": "^2.0.3",
     "prettier": "^3.0.3",
     "prettier-plugin-astro": "^0.12.0",
+    "symlink-dir": "^5.2.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   }

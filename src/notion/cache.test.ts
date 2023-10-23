@@ -97,18 +97,16 @@ test("CacheClient", async () => {
   );
 
   // 2. cache exists
-  const base2 = base1;
+  const base2 = baseClient();
   const client2 = client1;
-  base2.databases.query.mockReset();
-  base2.blocks.children.list.mockReset();
+  client2.base = base2;
 
   // get pages again
   const db2 = await client2.databases.query({
     database_id: "databaseId",
   });
   expect(db2).toEqual(databaseQueryRes());
-  // cache should be used
-  expect(base2.databases.query).toHaveBeenCalledTimes(0);
+  expect(base2.databases.query).toHaveBeenCalledTimes(0); // not called
 
   // get blocks again 1
   const blocks2_1 = await client1.blocks.children.list({
@@ -122,7 +120,7 @@ test("CacheClient", async () => {
   // cache file should not be updated
   expect(cacheStat2_1.mtime).toEqual(cacheStat1_1.mtime);
   // cache should be used
-  expect(base2.blocks.children.list).toHaveBeenCalledTimes(0);
+  expect(base2.blocks.children.list).toHaveBeenCalledTimes(0); // not called
 
   // get block again 2
   const blocks2_2 = await client1.blocks.children.list({
@@ -136,7 +134,7 @@ test("CacheClient", async () => {
   // cache file should not be updated
   expect(cacheStat2_2.mtime).toEqual(cacheStat1_2.mtime);
   // cache should be used
-  expect(base2.blocks.children.list).toHaveBeenCalledTimes(0);
+  expect(base2.blocks.children.list).toHaveBeenCalledTimes(0); // not called
 
   // 3. renew client and load cache
   const base3 = baseClient();
@@ -198,6 +196,26 @@ test("CacheClient", async () => {
   });
   expect(blocks4_2).toEqual(blockQueryRes("blockId2", newLastEditedTime));
   expect(base4.blocks.children.list).toHaveBeenCalledTimes(2); // called
+});
+
+test("allChildrenIds", async () => {
+  const base = baseClient();
+  const client = new CacheClient({
+    base,
+    databaseId: "databaseId",
+    useFs: false,
+  });
+  await client.databases.query({
+    database_id: "databaseId",
+  });
+  await client.blocks.children.list({
+    block_id: "pageId",
+  });
+  await client.blocks.children.list({
+    block_id: "blockId",
+  });
+
+  expect(client.allChildrenIds("pageId")).toEqual(["blockId", "blockId2"]);
 });
 
 function tmpdir(): Promise<string> {

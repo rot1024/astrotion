@@ -81,3 +81,110 @@ export function getLastEditedTime(
   }
   return;
 }
+
+export function expiresInForObjects(
+  objects: (
+    | PageObjectResponse
+    | BlockObjectResponse
+    | PartialPageObjectResponse
+    | PartialBlockObjectResponse
+    | undefined
+  )[],
+): Date | undefined {
+  let exp: Date | undefined;
+  for (const object of objects) {
+    if (!object) continue;
+
+    const object_expiry_time = expiresIn(object);
+    if (!object_expiry_time) continue;
+
+    if (!exp || object_expiry_time < exp) {
+      exp = object_expiry_time;
+    }
+  }
+
+  return exp;
+}
+
+export function expiresIn(
+  pageOrBlock:
+    | PageObjectResponse
+    | BlockObjectResponse
+    | PartialPageObjectResponse
+    | PartialBlockObjectResponse,
+): Date | undefined {
+  const exp: string[] = [];
+
+  if ("icon" in pageOrBlock && pageOrBlock.icon?.type === "file") {
+    exp.push(pageOrBlock.icon.file.expiry_time);
+  }
+
+  if ("cover" in pageOrBlock && pageOrBlock.cover?.type === "file") {
+    exp.push(pageOrBlock.cover.file.expiry_time);
+  }
+
+  if ("properties" in pageOrBlock && pageOrBlock.properties) {
+    for (const [_, prop] of Object.entries(pageOrBlock.properties)) {
+      if (prop.type === "files") {
+        for (const file of prop.files) {
+          if (file.type === "file") {
+            exp.push(file.file.expiry_time);
+          }
+        }
+      }
+    }
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "image" &&
+    pageOrBlock.image.type === "file"
+  ) {
+    exp.push(pageOrBlock.image.file.expiry_time);
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "video" &&
+    pageOrBlock.video.type === "file"
+  ) {
+    exp.push(pageOrBlock.video.file.expiry_time);
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "audio" &&
+    pageOrBlock.audio.type === "file"
+  ) {
+    exp.push(pageOrBlock.audio.file.expiry_time);
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "file" &&
+    pageOrBlock.file.type === "file"
+  ) {
+    exp.push(pageOrBlock.file.file.expiry_time);
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "pdf" &&
+    pageOrBlock.pdf.type === "file"
+  ) {
+    exp.push(pageOrBlock.pdf.file.expiry_time);
+  }
+
+  if (
+    "type" in pageOrBlock &&
+    pageOrBlock.type === "callout" &&
+    pageOrBlock.callout.icon?.type === "file"
+  ) {
+    exp.push(pageOrBlock.callout.icon.file.expiry_time);
+  }
+
+  if (exp.length === 0) return;
+
+  const expiry_time = exp.sort()[0];
+  return new Date(expiry_time);
+}

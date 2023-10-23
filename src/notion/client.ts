@@ -1,26 +1,41 @@
-import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
-import { NotionToMarkdown } from "notion-to-md";
-import rehypeStringify from "rehype-stringify";
-import remarkGfm from "remark-gfm";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
+import fs from "node:fs";
+import path from "node:path";
 
-import type { Post } from "../interfaces";
+import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
+import { PromisePool } from "@supercharge/promise-pool";
+import { NotionToMarkdown } from "notion-to-md";
+import sharp from "sharp";
+
+import type { Post, PostContent } from "../interfaces";
 
 import { buildPost, isValidPage } from "./conv";
+import {
+  md2html,
+  transformMdBlocks,
+  transformMdImageBlock,
+  transformMdLinkBlock,
+} from "./markdown";
 import { newNotionToMarkdown, type MinimalNotionClient } from "./minimal";
 import { getAll } from "./utils";
+
+const assetsCacheDir = ".astro/.astrotion/assets";
+const downloadConrurrency = 3;
 
 export class Client {
   client: MinimalNotionClient;
   n2m: NotionToMarkdown;
   databaseId: string;
+  debug = false;
 
-  constructor(client: MinimalNotionClient, databaseId: string) {
+  constructor(
+    client: MinimalNotionClient,
+    databaseId: string,
+    debug?: boolean,
+  ) {
     this.client = client;
     this.n2m = newNotionToMarkdown(client, {});
     this.databaseId = databaseId;
+    this.debug = debug || false;
   }
 
   async getAllPosts(): Promise<Post[]> {
@@ -73,16 +88,69 @@ export class Client {
     return posts.find((post) => post.slug === slug);
   }
 
-  async getPostContent(postId: string): Promise<string> {
+  async getPostContent(postId: string): Promise<PostContent> {
+    const posts = await this.getAllPosts();
     const mdblocks = await this.n2m.pageToMarkdown(postId);
-    const mdString = this.n2m.toMarkdownString(mdblocks);
+
+    const images = new Map<string, string>();
+    const transformed = transformMdBlocks(
+      mdblocks,
+      (block) => transformMdImageBlock(block, images),
+      (block) => transformMdLinkBlock(block, posts),
+    );
+
+    const mdString = this.n2m.toMarkdownString(transformed);
     const file = await md2html.process(mdString.parent);
-    return String(file);
+    return {
+      html: String(file),
+      images,
+    };
+  }
+
+  async downloadImages(images: Map<string, string> | undefined): Promise<void> {
+    if (!images) return;
+
+    await fs.promises.mkdir(assetsCacheDir, { recursive: true });
+
+    await PromisePool.withConcurrency(downloadConrurrency)
+      .for(images)
+      .process(async ([imageUrl, localUrl]) => {
+        const localDest = path.join("public", localUrl);
+
+        if (await fs.promises.stat(localDest).catch(() => null)) {
+          this.#log(`Download skipped: ${imageUrl} -> ${localDest}`);
+          return;
+        }
+
+        this.#log(`Download: ${imageUrl} -> ${localDest}`);
+
+        const res = await fetch(imageUrl);
+        if (res.status !== 200) {
+          console.error(
+            `Failed to download ${imageUrl} due to statu code ${res.status}`,
+          );
+          throw new Error(
+            `Failed to download ${imageUrl} due to statu code ${res.status}`,
+          );
+        }
+
+        const body = await res.arrayBuffer();
+
+        // optimize images
+        const optimzied = await sharp(body).rotate().webp().toBuffer();
+        this.#log(
+          "image optimized",
+          localDest,
+          body.byteLength,
+          "->",
+          optimzied.length,
+        );
+
+        await fs.promises.writeFile(localDest, optimzied);
+      });
+  }
+
+  #log(...args: any[]): void {
+    if (this.debug) console.debug("Client:", ...args);
   }
 }
-
-const md2html = unified()
-  .use(remarkParse)
-  .use(remarkGfm)
-  .use(remarkRehype)
-  .use(rehypeStringify);

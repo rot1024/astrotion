@@ -7,9 +7,9 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 
 import type { MinimalNotionClient } from "./minimal";
-import { getLastEditedTime } from "./utils";
+import { expiresInForObjects, getLastEditedTime } from "./utils";
 
-const defaultBaseDir = "./.astro/.notion-cache";
+const defaultBaseDir = "./.astro/.astrotion/notion-cache";
 
 export type Options = {
   base: MinimalNotionClient;
@@ -148,10 +148,13 @@ export class CacheClient {
 
     const updatedAt = this.updatedAtMap.get(parentId);
     const cacheUpdatedAt = this.cacheUpdatedAtMap.get(parentId);
+    const pageExp = this.#pageCacheExpirationTime(parentId);
+
     const canUse =
       !!updatedAt &&
       !!cacheUpdatedAt &&
-      updatedAt.getTime() === cacheUpdatedAt.getTime();
+      updatedAt.getTime() === cacheUpdatedAt.getTime() &&
+      (!pageExp || pageExp.getTime() > Date.now());
 
     this.#log(
       "validate cache:",
@@ -161,6 +164,8 @@ export class CacheClient {
       updatedAt,
       "cache:",
       cacheUpdatedAt,
+      "page cache exp:",
+      pageExp,
     );
 
     return canUse;
@@ -207,6 +212,25 @@ export class CacheClient {
       path.join(this.baseDir, name),
       JSON.stringify(data),
     );
+  }
+
+  allChildrenIds(parent: string): string[] {
+    const ids: string[] = [];
+    for (const [c, p] of this.parentMap) {
+      if (p === parent) {
+        ids.push(c, ...this.allChildrenIds(c));
+      }
+    }
+    return ids;
+  }
+
+  #pageCacheExpirationTime(pageId: string): Date | undefined {
+    const allPageAndBlocks = [pageId, ...this.allChildrenIds(pageId)];
+    this.#log("allPageAndBlocks for", pageId, ":", allPageAndBlocks);
+    const allCache = allPageAndBlocks
+      .map((id) => this.blockChildrenListCache.get(id))
+      .flatMap((res) => res?.results ?? []);
+    return expiresInForObjects(allCache);
   }
 
   #log(...args: any[]) {
