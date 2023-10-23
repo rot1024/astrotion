@@ -16,6 +16,7 @@ export type Options = {
   databaseId: string;
   useFs?: boolean;
   baseDir?: string;
+  debug?: boolean;
 };
 
 export class CacheClient {
@@ -23,6 +24,7 @@ export class CacheClient {
   databaseId: string;
   useFs: boolean;
   baseDir: string;
+  debug: boolean;
   blockChildrenListCache: Map<string, ListBlockChildrenResponse> = new Map();
   databaseQueryCache: Map<string, QueryDatabaseResponse> = new Map();
   updatedAtMap: Map<string, Date> = new Map();
@@ -34,6 +36,7 @@ export class CacheClient {
     this.databaseId = options.databaseId;
     this.useFs = options?.useFs ?? false;
     this.baseDir = options?.baseDir ?? defaultBaseDir;
+    this.debug = options?.debug ?? false;
     if (this.useFs) {
       fs.mkdirSync(this.baseDir, { recursive: true });
     }
@@ -45,10 +48,11 @@ export class CacheClient {
 
       const cache = this.databaseQueryCache.get(databaseId);
       if (cache) {
-        console.debug("use cache: database for " + databaseId);
+        this.#log("use cache: database for " + databaseId);
         return cache;
       }
 
+      this.#log("load databases " + databaseId);
       const res = await this.base.databases.query(args);
       this.databaseQueryCache.set(databaseId, res);
 
@@ -72,11 +76,12 @@ export class CacheClient {
         if (this.#canUseCache(blockId)) {
           const blocks = this.blockChildrenListCache.get(blockId);
           if (blocks) {
-            console.debug("use cache: blocks for " + blockId);
+            this.#log("use cache: blocks for " + blockId);
             return blocks;
           }
         }
 
+        this.#log("load blocks " + blockId);
         const res = await this.base.blocks.children.list(args);
 
         // update cache
@@ -85,8 +90,11 @@ export class CacheClient {
         if (blockUpdatedAt) {
           this.cacheUpdatedAtMap.set(blockId, blockUpdatedAt);
         }
+
         for (const block of res.results) {
-          this.parentMap.set(block.id, blockId);
+          if ("has_children" in block && block.has_children) {
+            this.parentMap.set(block.id, blockId);
+          }
         }
 
         await this.#writeMetaCache();
@@ -140,11 +148,22 @@ export class CacheClient {
 
     const updatedAt = this.updatedAtMap.get(parentId);
     const cacheUpdatedAt = this.cacheUpdatedAtMap.get(parentId);
-    return (
+    const canUse =
       !!updatedAt &&
       !!cacheUpdatedAt &&
-      updatedAt.getTime() === cacheUpdatedAt.getTime()
+      updatedAt.getTime() === cacheUpdatedAt.getTime();
+
+    this.#log(
+      "validate cache:",
+      blockId,
+      canUse ? "OK" : "EXPIRED",
+      "LET:",
+      updatedAt,
+      "cache:",
+      cacheUpdatedAt,
     );
+
+    return canUse;
   }
 
   #findParent(id: string): string | undefined {
@@ -172,6 +191,7 @@ export class CacheClient {
   }
 
   async #readCache<T = any>(name: string): Promise<T> {
+    this.#log("read cache: " + name);
     const data = await fs.promises.readFile(
       path.join(this.baseDir, name),
       "utf-8",
@@ -182,15 +202,15 @@ export class CacheClient {
   async #writeCache(name: string, data: any): Promise<void> {
     if (!this.useFs) return;
 
-    console.debug(`write cache: ${name}`);
+    this.#log(`write cache: ${name}`);
     await fs.promises.writeFile(
       path.join(this.baseDir, name),
       JSON.stringify(data),
     );
   }
 
-  async #removeCache(name: string): Promise<void> {
-    if (!this.useFs) return;
-    await fs.promises.rm(path.join(this.baseDir, name));
+  #log(...args: any[]) {
+    // if (this.debug) console.debug("CacheClient:", ...args);
+    console.debug("CacheClient:", ...args);
   }
 }

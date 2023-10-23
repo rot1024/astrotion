@@ -1,11 +1,13 @@
 import { defineConfig } from "astro/config";
 
 import { BASE_PATH, CUSTOM_DOMAIN } from "./src/constants";
+import astrotion from "./src/integrations";
 
 // https://astro.build/config
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
+  integrations: [astrotion()],
 });
 
 function getSite() {

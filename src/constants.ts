@@ -1,3 +1,4 @@
+export const DEBUG = import.meta.env.DEBUG || process.env.DEBUG || "";
 export const CUSTOM_DOMAIN =
   import.meta.env.CUSTOM_DOMAIN || process.env.CUSTOM_DOMAIN || "";
 export const BASE_PATH =

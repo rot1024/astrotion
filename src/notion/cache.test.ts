@@ -250,7 +250,7 @@ const blockQueryRes = (
       object: "block",
       created_time: "2021-01-01T00:00:00.000Z",
       last_edited_time,
-      has_children: false,
+      has_children: true,
       archived: false,
       parent: {
         type: "page_id",
