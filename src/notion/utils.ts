@@ -1,5 +1,12 @@
 import { APIResponseError } from "@notionhq/client";
-import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+  BlockObjectResponse,
+  DatabaseObjectResponse,
+  PageObjectResponse,
+  PartialBlockObjectResponse,
+  PartialDatabaseObjectResponse,
+  PartialPageObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 import retry from "async-retry";
 
 type Value<T> = T extends { [K in string | number | symbol]: infer V }
@@ -58,4 +65,19 @@ export async function getAll<T>(
   }
 
   return results;
+}
+
+export function getLastEditedTime(
+  obj:
+    | PageObjectResponse
+    | PartialPageObjectResponse
+    | PartialDatabaseObjectResponse
+    | DatabaseObjectResponse
+    | PartialBlockObjectResponse
+    | BlockObjectResponse,
+): Date | undefined {
+  if ("last_edited_time" in obj) {
+    return new Date(obj.last_edited_time);
+  }
+  return;
 }
