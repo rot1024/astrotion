@@ -28,3 +28,5 @@ jobs:
         run: yarn run prettier . --check
       - name: Type check
         run: yarn run typecheck
+      - name: Test
+        run: yarn run test
