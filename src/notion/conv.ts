@@ -1,13 +1,35 @@
 import type {
   DatabaseObjectResponse,
+  GetDatabaseResponse,
   PageObjectResponse,
   PartialDatabaseObjectResponse,
   PartialPageObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-import type { Post } from "../interfaces";
+import { DISABLE_DB_DESCRIPTION } from "../constants";
+import type { Database, Post } from "../interfaces";
 
 import type { Properties } from "./utils";
+
+export function buildDatabase(res: GetDatabaseResponse): Database {
+  if (!("title" in res)) throw new Error("invalid database");
+
+  const { url: icon, expiryTime: iconExpiryTime } =
+    getUrlFromIconAndCover(res.icon) ?? {};
+  const { url: cover, expiryTime: coverExpiryTime } =
+    getUrlFromIconAndCover(res.cover) ?? {};
+
+  return {
+    title: res.title.map((text) => text.plain_text).join(""),
+    description: DISABLE_DB_DESCRIPTION
+      ? ""
+      : res.description.map((text) => text.plain_text).join(""),
+    icon,
+    cover,
+    iconExpiryTime,
+    coverExpiryTime,
+  };
+}
 
 export function isValidPage(
   p:
@@ -29,12 +51,18 @@ export function isValidPage(
 
 export function buildPost(pageObject: PageObjectResponse): Post {
   const { properties, id, icon, cover } = pageObject;
+  const { url: iconUrl, expiryTime: iconExpiryTime } =
+    getUrlFromIconAndCover(icon) ?? {};
+  const { url: coverUrl, expiryTime: coverExpiryTime } =
+    getUrlFromIconAndCover(cover) ?? {};
+  const { url: featuredImageUrl, expiryTime: featuredImageExpiryTime } =
+    getUrlFromIconAndCover(cover) ?? {};
 
   const post: Post = {
     id: id,
     title: getRichText(properties.Page),
-    icon: getUrl(icon),
-    cover: getUrl(cover),
+    icon: iconUrl,
+    cover: coverUrl,
     slug: getRichText(properties.Slug),
     date:
       properties.Date.type === "date" ? properties.Date.date?.start ?? "" : "",
@@ -43,12 +71,15 @@ export function buildPost(pageObject: PageObjectResponse): Post {
         ? properties.Tags.multi_select
         : [],
     excerpt: getRichText(properties.Excerpt),
-    featuredImage: getUrl(properties.featuredImage),
+    featuredImage: featuredImageUrl,
     rank: properties.Rank.type === "number" ? properties.Rank.number ?? 0 : 0,
     updatedAt:
       properties.UpdatedAt.type === "last_edited_time"
         ? properties.UpdatedAt.last_edited_time
         : "",
+    iconExpiryTime,
+    coverExpiryTime,
+    featuredImageExpiryTime,
     raw: pageObject,
   };
 
@@ -64,20 +95,32 @@ function getRichText(p: Properties | undefined): string {
     : "";
 }
 
-function getUrl(
-  p:
+export function getUrlFromIconAndCover(
+  iconOrCover:
     | PageObjectResponse["icon"]
     | PageObjectResponse["cover"]
     | Properties
     | undefined,
-): string {
-  if (!p) return "";
-  if (p.type === "external") return p.external.url;
-  if (p.type === "file") return p.file.url;
-  if (p.type === "files") {
-    const f = p.files[0];
-    if (f.type === "external") return f.external.url;
-    if (f.type === "file") return f.file.url;
+): { url: string; expiryTime?: Date } | undefined {
+  if (iconOrCover?.type === "external") {
+    return {
+      url: iconOrCover.external.url,
+    };
   }
-  return "";
+
+  if (iconOrCover?.type === "file") {
+    return {
+      url: iconOrCover.file.url,
+      expiryTime: new Date(iconOrCover.file.expiry_time),
+    };
+  }
+
+  if (iconOrCover?.type === "files") {
+    const f = iconOrCover.files[0];
+    if (f.type === "external") return { url: f.external.url };
+    if (f.type === "file")
+      return { url: f.file.url, expiryTime: new Date(f.file.expiry_time) };
+  }
+
+  return;
 }

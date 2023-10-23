@@ -9,6 +9,10 @@ export const REQUEST_TIMEOUT_MS = parseInt(
   import.meta.env.REQUEST_TIMEOUT_MS || "10000",
   10,
 );
+export const DISABLE_DB_DESCRIPTION =
+  import.meta.env.DISABLE_DB_DESCRIPTION ||
+  process.env.DISABLE_DB_DESCRIPTION ||
+  "";
 
 // Notion
 export const NOTION_API_SECRET =

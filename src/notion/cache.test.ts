@@ -3,12 +3,14 @@ import os from "node:os";
 import path from "node:path";
 
 import type {
+  GetDatabaseResponse,
   ListBlockChildrenResponse,
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 import { expect, test, vi } from "vitest";
 
 import { CacheClient } from "./cache";
+import type { MinimalNotionClient } from "./minimal";
 
 test("CacheClient", async () => {
   // 1. no cache
@@ -300,20 +302,49 @@ const blockQueryRes = (
   ],
 });
 
-const baseClient = (lastEditedTime?: string) => ({
-  databases: {
-    query: vi.fn(async () => {
-      return databaseQueryRes(lastEditedTime);
-    }),
-  },
-  blocks: {
-    children: {
-      list: vi.fn(async (args) => {
-        return blockQueryRes(
-          args.block_id === "blockId" ? "blockId2" : "blockId",
-          lastEditedTime,
-        );
+const baseClient = (lastEditedTime?: string) =>
+  ({
+    databases: {
+      query: vi.fn(async () => {
+        return databaseQueryRes(lastEditedTime);
+      }),
+      retrieve: vi.fn(async (): Promise<GetDatabaseResponse> => {
+        return {
+          object: "database",
+          id: "databaseId",
+          created_time: "2021-01-01T00:00:00.000Z",
+          last_edited_time: "2021-01-01T00:00:00.000Z",
+          title: [
+            {
+              type: "text",
+              text: {
+                content: "Database",
+                link: null,
+              },
+              annotations: {
+                bold: false,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: "default",
+              },
+              plain_text: "Database",
+              href: null,
+            },
+          ],
+          properties: {},
+        };
       }),
     },
-  },
-});
+    blocks: {
+      children: {
+        list: vi.fn(async (args) => {
+          return blockQueryRes(
+            args.block_id === "blockId" ? "blockId2" : "blockId",
+            lastEditedTime,
+          );
+        }),
+      },
+    },
+  }) satisfies MinimalNotionClient;

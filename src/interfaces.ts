@@ -5,9 +5,13 @@ export type Client = {
   getPostContent(postId: string): Promise<PostContent>;
 };
 
-export type PostContent = {
-  html: string;
-  images?: Map<string, string>;
+export type Database = {
+  title: string;
+  description: string;
+  icon?: string;
+  cover?: string;
+  iconExpiryTime?: Date;
+  coverExpiryTime?: Date;
 };
 
 export type Post = {
@@ -23,6 +27,14 @@ export type Post = {
   icon?: string;
   cover?: string;
   featuredImage?: string;
+  iconExpiryTime?: Date;
+  coverExpiryTime?: Date;
+  featuredImageExpiryTime?: Date;
+};
+
+export type PostContent = {
+  html: string;
+  images?: Map<string, string>;
 };
 
 export type Tag = {

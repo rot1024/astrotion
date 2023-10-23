@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import type {
+  GetDatabaseResponse,
   ListBlockChildrenResponse,
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
@@ -26,6 +27,7 @@ export class CacheClient {
   baseDir: string;
   debug: boolean;
   blockChildrenListCache: Map<string, ListBlockChildrenResponse> = new Map();
+  databaseCache: Map<string, GetDatabaseResponse> = new Map();
   databaseQueryCache: Map<string, QueryDatabaseResponse> = new Map();
   updatedAtMap: Map<string, Date> = new Map();
   cacheUpdatedAtMap: Map<string, Date> = new Map();
@@ -48,11 +50,11 @@ export class CacheClient {
 
       const cache = this.databaseQueryCache.get(databaseId);
       if (cache) {
-        this.#log("use cache: database for " + databaseId);
+        this.#log("use cache: database query for " + databaseId);
         return cache;
       }
 
-      this.#log("load databases " + databaseId);
+      this.#log("query databases " + databaseId);
       const res = await this.base.databases.query(args);
       this.databaseQueryCache.set(databaseId, res);
 
@@ -64,6 +66,20 @@ export class CacheClient {
       }
 
       await this.#writeMetaCache();
+      return res;
+    },
+    retrieve: async (args) => {
+      const databaseId = args.database_id;
+
+      const cache = this.databaseCache.get(databaseId);
+      if (cache) {
+        this.#log("use cache: database for " + databaseId);
+        return cache;
+      }
+
+      this.#log("get database " + databaseId);
+      const res = await this.base.databases.retrieve(args);
+      this.databaseCache.set(databaseId, res);
       return res;
     },
   };
@@ -131,6 +147,7 @@ export class CacheClient {
   }
 
   async purgeCache(): Promise<void> {
+    this.databaseCache.clear();
     this.databaseQueryCache.clear();
     this.blockChildrenListCache.clear();
     this.updatedAtMap.clear();
@@ -226,7 +243,6 @@ export class CacheClient {
 
   #pageCacheExpirationTime(pageId: string): Date | undefined {
     const allPageAndBlocks = [pageId, ...this.allChildrenIds(pageId)];
-    this.#log("allPageAndBlocks for", pageId, ":", allPageAndBlocks);
     const allCache = allPageAndBlocks
       .map((id) => this.blockChildrenListCache.get(id))
       .flatMap((res) => res?.results ?? []);
@@ -234,7 +250,6 @@ export class CacheClient {
   }
 
   #log(...args: any[]) {
-    // if (this.debug) console.debug("CacheClient:", ...args);
-    console.debug("CacheClient:", ...args);
+    if (this.debug) console.debug("CacheClient:", ...args);
   }
 }

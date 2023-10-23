@@ -6,9 +6,9 @@ import { PromisePool } from "@supercharge/promise-pool";
 import { NotionToMarkdown } from "notion-to-md";
 import sharp from "sharp";
 
-import type { Post, PostContent } from "../interfaces";
+import type { Database, Post, PostContent } from "../interfaces";
 
-import { buildPost, isValidPage } from "./conv";
+import { buildDatabase, buildPost, isValidPage } from "./conv";
 import {
   md2html,
   transformMdBlocks,
@@ -36,6 +36,13 @@ export class Client {
     this.n2m = newNotionToMarkdown(client, {});
     this.databaseId = databaseId;
     this.debug = debug || false;
+  }
+
+  async getDatabase(): Promise<Database> {
+    const database = await this.client.databases.retrieve({
+      database_id: this.databaseId,
+    });
+    return buildDatabase(database);
   }
 
   async getAllPosts(): Promise<Post[]> {
@@ -112,7 +119,7 @@ export class Client {
 
     await fs.promises.mkdir(assetsCacheDir, { recursive: true });
 
-    await PromisePool.withConcurrency(downloadConrurrency)
+    const { errors } = await PromisePool.withConcurrency(downloadConrurrency)
       .for(images)
       .process(async ([imageUrl, localUrl]) => {
         const localDest = path.join("public", localUrl);
@@ -126,9 +133,6 @@ export class Client {
 
         const res = await fetch(imageUrl);
         if (res.status !== 200) {
-          console.error(
-            `Failed to download ${imageUrl} due to statu code ${res.status}`,
-          );
           throw new Error(
             `Failed to download ${imageUrl} due to statu code ${res.status}`,
           );
@@ -148,6 +152,10 @@ export class Client {
 
         await fs.promises.writeFile(localDest, optimzied);
       });
+
+    if (errors) {
+      throw new Error(`Failed to download images: ${errors}`);
+    }
   }
 
   #log(...args: any[]): void {
