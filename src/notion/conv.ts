@@ -9,23 +9,33 @@ import type {
 import { DISABLE_DB_DESCRIPTION } from "../constants";
 import type { Database, Post } from "../interfaces";
 
-import type { Properties } from "./utils";
+import { fileUrlToAssetUrl, type Properties } from "./utils";
 
-export function buildDatabase(res: GetDatabaseResponse): Database {
+export function buildDatabase(res: GetDatabaseResponse): {
+  database: Database;
+  iconUrl?: string;
+  coverUrl?: string;
+  iconExpiryTime?: Date;
+  coverExpiryTime?: Date;
+} {
   if (!("title" in res)) throw new Error("invalid database");
 
-  const { url: icon, expiryTime: iconExpiryTime } =
+  const { url: iconUrl, expiryTime: iconExpiryTime } =
     getUrlFromIconAndCover(res.icon) ?? {};
-  const { url: cover, expiryTime: coverExpiryTime } =
+  const { url: coverUrl, expiryTime: coverExpiryTime } =
     getUrlFromIconAndCover(res.cover) ?? {};
 
   return {
-    title: res.title.map((text) => text.plain_text).join(""),
-    description: DISABLE_DB_DESCRIPTION
-      ? ""
-      : res.description.map((text) => text.plain_text).join(""),
-    icon,
-    cover,
+    database: {
+      title: res.title.map((text) => text.plain_text).join(""),
+      description: DISABLE_DB_DESCRIPTION
+        ? ""
+        : res.description.map((text) => text.plain_text).join(""),
+      icon: fileUrlToAssetUrl(iconUrl),
+      cover: fileUrlToAssetUrl(coverUrl),
+    },
+    iconUrl,
+    coverUrl,
     iconExpiryTime,
     coverExpiryTime,
   };
@@ -49,7 +59,15 @@ export function isValidPage(
   );
 }
 
-export function buildPost(pageObject: PageObjectResponse): Post {
+export function buildPost(pageObject: PageObjectResponse): {
+  post: Post;
+  iconUrl?: string;
+  coverUrl?: string;
+  featuredImageUrl?: string;
+  iconExpiryTime?: Date;
+  coverExpiryTime?: Date;
+  featuredImageExpiryTime?: Date;
+} {
   const { properties, id, icon, cover } = pageObject;
   const { url: iconUrl, expiryTime: iconExpiryTime } =
     getUrlFromIconAndCover(icon) ?? {};
@@ -61,8 +79,8 @@ export function buildPost(pageObject: PageObjectResponse): Post {
   const post: Post = {
     id: id,
     title: getRichText(properties.Page),
-    icon: iconUrl,
-    cover: coverUrl,
+    icon: fileUrlToAssetUrl(iconUrl),
+    cover: fileUrlToAssetUrl(coverUrl),
     slug: getRichText(properties.Slug),
     date:
       properties.Date.type === "date" ? properties.Date.date?.start ?? "" : "",
@@ -71,19 +89,24 @@ export function buildPost(pageObject: PageObjectResponse): Post {
         ? properties.Tags.multi_select
         : [],
     excerpt: getRichText(properties.Excerpt),
-    featuredImage: featuredImageUrl,
+    featuredImage: fileUrlToAssetUrl(featuredImageUrl),
     rank: properties.Rank.type === "number" ? properties.Rank.number ?? 0 : 0,
     updatedAt:
       properties.UpdatedAt.type === "last_edited_time"
         ? properties.UpdatedAt.last_edited_time
         : "",
-    iconExpiryTime,
-    coverExpiryTime,
-    featuredImageExpiryTime,
     raw: pageObject,
   };
 
-  return post;
+  return {
+    post,
+    iconUrl,
+    coverUrl,
+    featuredImageUrl,
+    iconExpiryTime,
+    coverExpiryTime,
+    featuredImageExpiryTime,
+  };
 }
 
 function getRichText(p: Properties | undefined): string {

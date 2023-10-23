@@ -6,12 +6,8 @@ Astro + Notion + Blog (WIP)
 
 First phase:
 
-- Download non-external images because they have expiration dates
-- Rewrite links with ids to slugs
-- RSS
-- Optimize header for SEO
-- Sitemap
 - Post list page, 404 page, styling (tailwind)
+- Download icon, cover, featuredImages
 
 Second phase:
 

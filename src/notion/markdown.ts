@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import type { MdBlock } from "notion-to-md/build/types";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
@@ -9,7 +7,7 @@ import { unified } from "unified";
 
 import type { Post } from "../interfaces";
 
-export const assetsDir = "/assets";
+import { fileUrlToAssetUrl } from "./utils";
 
 export const md2html = unified()
   .use(remarkParse)
@@ -43,8 +41,8 @@ export function transformMdImageBlock(
   const imageMarkdown = block.parent;
   const imageUrl = imageMarkdown.match(/!\[.*\]\((.*)\)/)?.[1];
   if (imageUrl) {
-    const newUrl = toInternalImageUrl(imageUrl);
-    if (newUrl) {
+    const newUrl = fileUrlToAssetUrl(imageUrl);
+    if (newUrl && newUrl !== imageUrl) {
       imageUrls.set(imageUrl, newUrl);
       block.parent = block.parent.replace(imageUrl, newUrl);
     }
@@ -67,19 +65,4 @@ export function transformMdLinkBlock(block: MdBlock, posts: Post[]): MdBlock {
   }
 
   return block;
-}
-
-function toInternalImageUrl(imageUrl: string): string {
-  const url = new URL(imageUrl);
-  if (!url.searchParams.has("X-Amz-Expires")) return "";
-
-  const filename = url.pathname.split("/").at(-1);
-  if (!filename) return "";
-
-  // replace ext to webp
-  const ext = path.extname(filename);
-  const finalFilename = ext ? filename.replace(ext, ".webp") : filename;
-
-  const newUrl = path.join(assetsDir, finalFilename);
-  return newUrl;
 }

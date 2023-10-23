@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { APIResponseError } from "@notionhq/client";
 import type {
   BlockObjectResponse,
@@ -188,3 +190,24 @@ export function expiresIn(
   const expiry_time = exp.sort()[0];
   return new Date(expiry_time);
 }
+
+export function fileUrlToAssetUrl(
+  imageUrl: string | undefined,
+): string | undefined {
+  if (!imageUrl) return undefined;
+
+  const url = new URL(imageUrl);
+  if (!url.searchParams.has("X-Amz-Expires")) return imageUrl;
+
+  const filename = url.pathname.split("/").at(-1);
+  if (!filename) return imageUrl;
+
+  // replace ext to webp
+  const ext = path.extname(filename);
+  const finalFilename = ext ? filename.replace(ext, ".webp") : filename;
+
+  const newUrl = path.join(assetsDir, finalFilename);
+  return newUrl;
+}
+
+export const assetsDir = "/assets";

@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
+import { assetUrl, postUrl } from "../../utils";
 
 const { slug } = Astro.params;
 
@@ -16,7 +17,12 @@ const content = post ? await client.getPostContent(post.id) : undefined;
 await client.downloadImages(content?.images);
 ---
 
-<Layout title={slug || ""}>
+<Layout
+  title={post.title}
+  description={post.excerpt}
+  path={postUrl(post.slug)}
+  ogImage={post.featuredImage ? assetUrl(post.featuredImage) : undefined}
+>
   <h1>{post.title}</h1>
   <main set:html={content?.html} />
 </Layout>

@@ -1,20 +1,45 @@
 ---
+import defaultClient from "../notion";
+import { getUrl } from "../utils";
+
 interface Props {
   title: string;
+  description?: string;
+  path?: string;
+  ogImage?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = "", path = "/", ogImage = "" } = Astro.props;
+
+const database = await defaultClient.getDatabase();
+
+const siteTitle = title ? `${title} - ${database.title}` : database.title;
+const siteDescription = description ? description : database.description;
+const siteURL = getUrl(path, Astro.site);
+const siteOGImage = getUrl("og-image.png", Astro.site);
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>{title}</title>
     <meta name="description" content="Astro description" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="description" content={siteDescription} />
+    <link rel="canonical" href={siteURL} />
+    <meta property="og:url" content={siteURL} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={siteDescription} />
+    <meta property="og:site_name" content={database.title} />
+    <meta property="og:image" content={ogImage || siteOGImage} />
+    <meta name="twitter:title" content={siteTitle} />
+    <meta name="twitter:description" content={siteDescription} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage || siteOGImage} />
   </head>
   <body>
     <slot />

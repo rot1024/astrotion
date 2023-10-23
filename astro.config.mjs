@@ -1,4 +1,6 @@
+import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
+import robotsTxt from "astro-robots-txt";
 
 import { BASE_PATH, CUSTOM_DOMAIN } from "./src/constants";
 import astrotion from "./src/integrations";
@@ -7,7 +9,7 @@ import astrotion from "./src/integrations";
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
-  integrations: [astrotion()],
+  integrations: [astrotion(), sitemap(), robotsTxt()],
 });
 
 function getSite() {

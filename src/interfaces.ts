@@ -10,8 +10,6 @@ export type Database = {
   description: string;
   icon?: string;
   cover?: string;
-  iconExpiryTime?: Date;
-  coverExpiryTime?: Date;
 };
 
 export type Post = {
@@ -27,9 +25,6 @@ export type Post = {
   icon?: string;
   cover?: string;
   featuredImage?: string;
-  iconExpiryTime?: Date;
-  coverExpiryTime?: Date;
-  featuredImageExpiryTime?: Date;
 };
 
 export type PostContent = {

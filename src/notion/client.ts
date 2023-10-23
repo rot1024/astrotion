@@ -39,10 +39,13 @@ export class Client {
   }
 
   async getDatabase(): Promise<Database> {
-    const database = await this.client.databases.retrieve({
+    const res = await this.client.databases.retrieve({
       database_id: this.databaseId,
     });
-    return buildDatabase(database);
+    const { database } = buildDatabase(res);
+
+    // TODO: download images
+    return database;
   }
 
   async getAllPosts(): Promise<Post[]> {
@@ -80,7 +83,10 @@ export class Client {
       }),
     );
 
-    return results.filter(isValidPage).map(buildPost);
+    const posts = results.filter(isValidPage).map(buildPost);
+
+    // TODO: download images
+    return posts.map((p) => p.post);
   }
 
   async getPostById(postId: string | undefined): Promise<Post | undefined> {
