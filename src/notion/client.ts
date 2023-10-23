@@ -125,11 +125,11 @@ export class Client {
         const localDest = path.join("public", localUrl);
 
         if (await fs.promises.stat(localDest).catch(() => null)) {
-          this.#log(`Download skipped: ${imageUrl} -> ${localDest}`);
+          this.#log(`download skipped: ${imageUrl} -> ${localDest}`);
           return;
         }
 
-        this.#log(`Download: ${imageUrl} -> ${localDest}`);
+        this.#log(`download: ${imageUrl} -> ${localDest}`);
 
         const res = await fetch(imageUrl);
         if (res.status !== 200) {
@@ -145,16 +145,17 @@ export class Client {
         this.#log(
           "image optimized",
           localDest,
-          body.byteLength,
-          "->",
-          optimzied.length,
+          `${body.byteLength} bytes -> ${optimzied.length} bytes`,
+          `(${Math.floor(optimzied.length / body.byteLength) * 100}%)`,
         );
 
         await fs.promises.writeFile(localDest, optimzied);
       });
 
-    if (errors) {
-      throw new Error(`Failed to download images: ${errors}`);
+    if (errors.length > 0) {
+      throw new Error(
+        `Failed to download images: ${errors.map((e) => e.message).join(", ")}`,
+      );
     }
   }
 

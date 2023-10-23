@@ -165,24 +165,28 @@ export class CacheClient {
 
     const updatedAt = this.updatedAtMap.get(parentId);
     const cacheUpdatedAt = this.cacheUpdatedAtMap.get(parentId);
-    const pageExp = this.#pageCacheExpirationTime(parentId);
+
+    // An error may occur if only some of the images have been downloaded, but when such a situation does not occur,
+    // it is usually not necessary to check the expiration date of the image URL.
+
+    // const pageExp = this.#pageCacheExpirationTime(parentId);
 
     const canUse =
       !!updatedAt &&
       !!cacheUpdatedAt &&
-      updatedAt.getTime() === cacheUpdatedAt.getTime() &&
-      (!pageExp || pageExp.getTime() > Date.now());
+      updatedAt.getTime() === cacheUpdatedAt.getTime(); // &&
+    // (!pageExp || pageExp.getTime() > Date.now());
 
     this.#log(
       "validate cache:",
       blockId,
       canUse ? "OK" : "EXPIRED",
-      "LET:",
+      "let:", // Last edited time
       updatedAt,
       "cache:",
       cacheUpdatedAt,
-      "page cache exp:",
-      pageExp,
+      // "exp:",
+      // pageExp,
     );
 
     return canUse;
