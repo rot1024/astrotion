@@ -23,6 +23,7 @@
     "@astrojs/sitemap": "^3.0.2",
     "@astrojs/tailwind": "^5.0.2",
     "@notionhq/client": "^2.2.13",
+    "@resvg/resvg-js": "^2.6.0",
     "@supercharge/promise-pool": "^3.1.0",
     "astro": "^3.3.2",
     "astro-google-fonts-optimizer": "^0.2.2",
