@@ -1,8 +1,9 @@
 ---
-import GA from "../components/GA.astro";
 import { PUBLIC_GA_TRACKING_ID } from "../constants";
 import defaultClient from "../notion";
 import { getUrl } from "../utils";
+import "prismjs/themes/prism-tomorrow.min.css";
+import "katex/dist/katex.min.css";
 
 interface Props {
   title: string;
@@ -44,8 +45,30 @@ const siteOGImage = getUrl("og-image.png", Astro.site);
     <meta name="twitter:image" content={ogImage || siteOGImage} />
   </head>
   <body>
-    <GA trackingId={PUBLIC_GA_TRACKING_ID} />
+    {
+      PUBLIC_GA_TRACKING_ID && (
+        <>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA_TRACKING_ID}`}
+          />
+          <script is:inline define:vars={{ trackingId: PUBLIC_GA_TRACKING_ID }}>
+            window.dataLayer = window.dataLayer || []; function gtag()
+            {dataLayer.push(arguments)}
+            gtag('js', new Date()); gtag('config', trackingId);
+          </script>
+        </>
+      )
+    }
     <slot />
+    <script>
+      import mermaid from "mermaid";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "neutral",
+      });
+    </script>
   </body>
 </html>
 <style is:global>

@@ -1,6 +1,10 @@
+import rehypePrism from "@mapbox/rehype-prism";
 import type { MdBlock } from "notion-to-md/build/types";
+import rehypeKatex from "rehype-katex";
+import rehypeMermaid from "rehype-mermaid";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
@@ -12,7 +16,11 @@ import { fileUrlToAssetUrl } from "./utils";
 export const md2html = unified()
   .use(remarkParse)
   .use(remarkGfm)
+  .use(remarkMath)
   .use(remarkRehype)
+  .use(rehypeKatex)
+  .use(rehypeMermaid, { strategy: "pre-mermaid" })
+  .use(rehypePrism as any) // rehypePrism reports type error
   .use(rehypeStringify);
 
 export function transformMdBlocks(
