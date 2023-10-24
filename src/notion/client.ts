@@ -79,9 +79,7 @@ export class Client implements ClientType {
     );
 
     const posts = results.filter(isValidPage).map(buildPost);
-
-    // TODO: download images
-    return posts.map((p) => p.post);
+    return posts;
   }
 
   async getPostById(postId: string | undefined): Promise<Post | undefined> {

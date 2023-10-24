@@ -52,22 +52,12 @@ export function isValidPage(
   );
 }
 
-export function buildPost(pageObject: PageObjectResponse): {
-  post: Post;
-  iconUrl?: string;
-  coverUrl?: string;
-  featuredImageUrl?: string;
-  iconExpiryTime?: Date;
-  coverExpiryTime?: Date;
-  featuredImageExpiryTime?: Date;
-} {
+export function buildPost(pageObject: PageObjectResponse): Post {
   const { properties, id, icon, cover } = pageObject;
-  const { url: iconUrl, expiryTime: iconExpiryTime } =
-    getUrlFromIconAndCover(icon) ?? {};
-  const { url: coverUrl, expiryTime: coverExpiryTime } =
-    getUrlFromIconAndCover(cover) ?? {};
-  const { url: featuredImageUrl, expiryTime: featuredImageExpiryTime } =
-    getUrlFromIconAndCover(cover) ?? {};
+  const { url: iconUrl } = getUrlFromIconAndCover(icon) ?? {};
+  const { url: coverUrl } = getUrlFromIconAndCover(cover) ?? {};
+  const { url: featuredImageUrl } =
+    getUrlFromIconAndCover(properties.FeaturedImage) ?? {};
   const iconAssetUrl = fileUrlToAssetUrl(iconUrl);
   const coverAssetUrl = fileUrlToAssetUrl(iconUrl);
   const featuredImageAssetUrl = fileUrlToAssetUrl(featuredImageUrl);
@@ -100,15 +90,7 @@ export function buildPost(pageObject: PageObjectResponse): {
     images,
   };
 
-  return {
-    post,
-    iconUrl,
-    coverUrl,
-    featuredImageUrl,
-    iconExpiryTime,
-    coverExpiryTime,
-    featuredImageExpiryTime,
-  };
+  return post;
 }
 
 function getRichText(p: Properties | undefined): string {

@@ -2,6 +2,7 @@
 import Pagination from "../components/Pagination.astro";
 import PostList from "../components/PostList.astro";
 import config from "../config";
+import { downloadImages } from "../download";
 import Layout from "../layouts/Layout.astro";
 import client from "../notion";
 import { paginate } from "../utils";
@@ -12,6 +13,7 @@ const [database, posts] = await Promise.all([
 ]);
 
 const { pageCount, pageInt, pagePosts } = paginate(posts, "1");
+await downloadImages(database?.images, ...posts.map((p) => p.images));
 ---
 
 <Layout>
