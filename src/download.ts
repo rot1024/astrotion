@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import PromisePool from "@supercharge/promise-pool";
+import { PromisePool } from "@supercharge/promise-pool";
 import sharp from "sharp";
 
 import { debug, mergeMaps } from "./utils";
