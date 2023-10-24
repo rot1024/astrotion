@@ -20,7 +20,7 @@ export const md2html = unified()
   .use(remarkRehype)
   .use(rehypeKatex)
   .use(rehypeMermaid, { strategy: "pre-mermaid" })
-  .use(rehypePrism as any) // rehypePrism reports type error
+  .use(rehypePrism)
   .use(rehypeStringify);
 
 export function transformMdBlocks(
