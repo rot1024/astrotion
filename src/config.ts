@@ -1,7 +1,8 @@
+import defaultConfig from "./config-default";
 import type { Config } from "./interfaces";
 
 const config: Config = {
-  // astrotion config
+  ...defaultConfig,
 };
 
 export default config;

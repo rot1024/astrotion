@@ -10,14 +10,7 @@ import astrotion from "./src/integrations";
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
-  integrations: [
-    astrotion(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
-    sitemap(),
-    robotsTxt(),
-  ],
+  integrations: [astrotion(), tailwind(), sitemap(), robotsTxt()],
   vite: { optimizeDeps: { exclude: ["@resvg/resvg-js"] } },
 });
 

@@ -1,8 +1,9 @@
 ---
+import config from "../../config";
 import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
-import { postUrl } from "../../utils";
+import { postUrl, formatPostDate } from "../../utils";
 
 const { slug } = Astro.params;
 
@@ -25,18 +26,48 @@ await downloadImages(content?.images, post?.images, database?.images);
   path={postUrl(post.slug)}
   ogImage={postUrl(post.slug + ".webp", Astro.site)}
 >
-  <h1>{post.title}</h1>
-  <main set:html={content?.html} />
+  <main class="py-12 lg:py-20">
+    <article class="max-w-5xl mx-auto px-3">
+      <header class="mx-auto pb-12 lg:pb-20 max-w-3xl text-center">
+        <h1 class:list={["text-5xl mb-6 title", config.postTitle?.classes]}>
+          {post.title}
+        </h1>
+        <p class="text-center">
+          {formatPostDate(post.date)}
+        </p>
+      </header>
+      {
+        post.featuredImage && (
+          <img
+            class="rounded-xl mx-auto aspect-video object-cover"
+            style="min-width: 80%;"
+            loading="lazy"
+            src={post.featuredImage}
+            alt={post.title}
+          />
+        )
+      }
+      <section
+        class:list={[
+          "max-w-3xl mx-auto py-6 lg:py-12 markdown post",
+          config.post?.classes,
+        ]}
+        set:html={content?.html}
+      />
+    </article>
+  </main>
 </Layout>
+<style
+  define:vars={{
+    titleFontFamily: config.titleStyle?.fontFamily || "inherit",
+    postFfontFamily: config.post?.fontFamily || "inherit",
+  }}
+>
+  .title {
+    font-family: var(--titleFontFamily);
+  }
 
-<style>
-  main {
-    margin: auto;
-    padding: 1rem;
-    width: 800px;
-    max-width: calc(100% - 2rem);
-    color: white;
-    font-size: 20px;
-    line-height: 1.6;
+  .post {
+    font-family: var(--postFfontFamily);
   }
 </style>

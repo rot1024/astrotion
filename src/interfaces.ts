@@ -43,10 +43,49 @@ export type Tag = {
 export type Config = {
   title?: string;
   description?: string;
+  dateFormat?: string;
   og?: {
     siteImagePath?: string;
     baseImagePath?: string;
-    fontColor?: string;
     backgroundColor?: string;
+    titleStyle?: {
+      x?: number;
+      y?: number;
+      width?: number;
+      fontFamily?: string[];
+      fontSize?: number;
+      lineHeight?: number;
+      lineClamp?: number;
+      align?: "left" | "right" | "center";
+      color?: string;
+    };
+  };
+  googleFonts?: string;
+  body?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  nav?: {
+    classes?: string;
+  };
+  navTitle?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  titleStyle?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  post?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  postTitle?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  footer?: {
+    content?: string;
+    classes?: string;
   };
 };

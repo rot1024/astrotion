@@ -1,0 +1,32 @@
+---
+import Card from "../components/Card.astro";
+import type { Post } from "../interfaces";
+import { formatPostDate, postUrl } from "../utils";
+
+export interface Props {
+  posts: Post[];
+  page?: number;
+  pageSize?: number;
+  total?: number;
+}
+
+const { posts } = Astro.props;
+---
+
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+  {
+    posts.map((p) => (
+      <Fragment>
+        <Fragment>
+          <Card
+            href={postUrl(p.slug)}
+            title={p.title}
+            body={p.excerpt}
+            image={p.featuredImage || postUrl(p.slug + ".webp")}
+            date={formatPostDate(p.date)}
+          />
+        </Fragment>
+      </Fragment>
+    ))
+  }
+</section>

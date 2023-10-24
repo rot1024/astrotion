@@ -1,6 +1,10 @@
 import path from "node:path";
 
+import { format } from "date-fns";
+
+import config from "./config";
 import { BASE_PATH, DEBUG } from "./constants";
+import type { Config } from "./interfaces";
 
 export function postUrl(slug: string, base?: string | URL): string {
   return getUrl(`/posts/${slug}`, base);
@@ -39,4 +43,8 @@ export function mergeMaps<K, V>(
 export function debug(...args: any[]) {
   if (!DEBUG) return;
   console.debug(...args);
+}
+
+export function formatPostDate(date: string): string {
+  return format(new Date(date), config.dateFormat || "yyyy-MM-dd");
 }

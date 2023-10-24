@@ -50,7 +50,8 @@ export const GET: APIRoute<Props> = async ({ params }) => {
         lineHeight: 80,
         lineClamp: 1,
         align: "center",
-        color: config.og?.fontColor || "#000",
+        color: "#000",
+        ...config.og?.titleStyle,
       },
     ],
     {

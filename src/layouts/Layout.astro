@@ -1,20 +1,23 @@
 ---
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
+import "prismjs/themes/prism-tomorrow.min.css";
+import "katex/dist/katex.min.css";
+
+import Nav from "../components/Nav.astro";
 import config from "../config";
 import { PUBLIC_GA_TRACKING_ID } from "../constants";
 import client from "../notion";
 import { getUrl } from "../utils";
-
-import "prismjs/themes/prism-tomorrow.min.css";
-import "katex/dist/katex.min.css";
+import "../styles/main.css";
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
   path?: string;
   ogImage?: string;
 }
 
-const { title, description = "", path = "/", ogImage = "" } = Astro.props;
+const { title = "", description = "", path = "/", ogImage = "" } = Astro.props;
 
 const database = await client.getDatabase();
 const siteTitle = title ? `${title} - ${database.title}` : database.title;
@@ -27,17 +30,14 @@ const siteOGImage = getUrl(
 ---
 
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <title>{title}</title>
+    <title>{title || siteTitle}</title>
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="description" content={siteDescription} />
-    <link rel="canonical" href={siteURL} />
     <meta property="og:url" content={siteURL} />
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={siteDescription} />
@@ -47,8 +47,23 @@ const siteOGImage = getUrl(
     <meta name="twitter:description" content={siteDescription} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage || siteOGImage} />
+    <link rel="icon" type="image/svg+xml" href={getUrl("/favicon.svg")} />
+    <link rel="sitemap" href={getUrl("/sitemap-index.xml")} />
+    <link rel="canonical" href={siteURL} />
+    {
+      config?.googleFonts && (
+        <GoogleFontsOptimizer
+          url={`https://fonts.googleapis.com/css2?family=${config.googleFonts}&display=swap`}
+        />
+      )
+    }
   </head>
-  <body>
+  <body
+    class:list={[
+      "bg-white text-black font-body leading-normal body",
+      config.body?.classes,
+    ]}
+  >
     {
       PUBLIC_GA_TRACKING_ID && (
         <>
@@ -65,7 +80,20 @@ const siteOGImage = getUrl(
         </>
       )
     }
+    <Nav />
     <slot />
+    {
+      config.footer?.content && (
+        <footer
+          class:list={[
+            "text-xs text-gray-600 text-center",
+            config.footer?.classes,
+          ]}
+        >
+          <p class="max-w-5xl mx-auto px-6 py-6">{config.footer?.content}</p>
+        </footer>
+      )
+    }
     <script>
       import mermaid from "mermaid";
       mermaid.initialize({
@@ -75,32 +103,8 @@ const siteOGImage = getUrl(
     </script>
   </body>
 </html>
-<style is:global>
-  :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
-  }
-  html {
-    font-family: system-ui, sans-serif;
-    background: #13151a;
-    background-size: 224px;
-  }
-  code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
+<style define:vars={{ bodyFontFamily: config.body?.fontFamily || "inherit" }}>
+  .body {
+    font-family: var(--bodyFontFamily);
   }
 </style>

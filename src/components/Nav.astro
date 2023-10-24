@@ -1,0 +1,28 @@
+---
+import config from "../config";
+import client from "../notion";
+import { getUrl } from "../utils";
+
+const database = await client.getDatabase();
+---
+
+<nav class:list={[config.nav?.classes]}>
+  <div
+    class="max-w-5xl mx-auto px-3 py-3 flex items-center justify-between h-16"
+  >
+    <a
+      href={getUrl("/")}
+      class:list={["text-xl title", config.navTitle?.classes]}
+      >{database.title}</a
+    >
+  </div>
+</nav>
+<style
+  define:vars={{
+    titleFontFamily: config.navTitle?.fontFamily || "inherit",
+  }}
+>
+  .title {
+    font-family: var(--titleFontFamily);
+  }
+</style>
