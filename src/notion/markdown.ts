@@ -1,7 +1,7 @@
-import rehypePrism from "@mapbox/rehype-prism";
 import type { MdBlock } from "notion-to-md/build/types";
 import rehypeKatex from "rehype-katex";
 import rehypeMermaid from "rehype-mermaid";
+import rehypePrism from "rehype-prism-plus";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";

@@ -1,4 +1,5 @@
 import sitemap from "@astrojs/sitemap";
+import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import robotsTxt from "astro-robots-txt";
 
@@ -9,7 +10,14 @@ import astrotion from "./src/integrations";
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
-  integrations: [astrotion(), sitemap(), robotsTxt()],
+  integrations: [
+    astrotion(),
+    tailwind({
+      applyBaseStyles: false,
+    }),
+    sitemap(),
+    robotsTxt(),
+  ],
 });
 
 function getSite() {
