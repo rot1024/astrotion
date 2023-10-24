@@ -4,7 +4,7 @@ import { format } from "date-fns";
 
 import config from "./config";
 import { BASE_PATH, DEBUG } from "./constants";
-import type { Config } from "./interfaces";
+import type { Post } from "./interfaces";
 
 export function postUrl(slug: string, base?: string | URL): string {
   return getUrl(`/posts/${slug}`, base);
@@ -47,4 +47,18 @@ export function debug(...args: any[]) {
 
 export function formatPostDate(date: string): string {
   return format(new Date(date), config.dateFormat || "yyyy-MM-dd");
+}
+
+export function paginate(posts: Post[], page: string) {
+  const pageSize = config.postsPerPage || 20;
+  const pageInt = parseInt(page, 10);
+  const pageCount = Math.ceil(posts.length / pageSize);
+  const pagePosts = posts.slice((pageInt - 1) * pageSize, pageInt * pageSize);
+
+  return {
+    pagePosts,
+    pageCount,
+    pageInt,
+    pageSize,
+  };
 }

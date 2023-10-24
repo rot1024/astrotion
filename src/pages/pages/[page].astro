@@ -1,17 +1,32 @@
 ---
-import Pagination from "../components/Pagination.astro";
-import PostList from "../components/PostList.astro";
-import config from "../config";
-import Layout from "../layouts/Layout.astro";
-import client from "../notion";
-import { paginate } from "../utils";
+import Pagination from "../../components/Pagination.astro";
+import PostList from "../../components/PostList.astro";
+import config from "../../config";
+import Layout from "../../layouts/Layout.astro";
+import client from "../../notion";
+import { paginate } from "../../utils";
+
+export interface Props {
+  page?: string;
+}
+
+export async function getStaticPaths() {
+  const posts = await client.getAllPosts();
+  const { pageCount } = paginate(posts, "1");
+
+  return Array.from({ length: pageCount }, (_, i) => ({
+    params: { page: (i + 1).toString() },
+  }));
+}
+
+const { page } = Astro.params;
 
 const [database, posts] = await Promise.all([
   client.getDatabase(),
   client.getAllPosts(),
 ]);
 
-const { pageCount, pageInt, pagePosts } = paginate(posts, "1");
+const { pageCount, pageInt, pagePosts } = paginate(posts, page || "1");
 ---
 
 <Layout>
@@ -22,7 +37,7 @@ const { pageCount, pageInt, pagePosts } = paginate(posts, "1");
           {database.title}
         </h1>
         <p class="mx-auto max-w-xl">
-          {database.description}
+          Page {pageInt} of {pageCount}
         </p>
       </header>
       <PostList posts={pagePosts} />

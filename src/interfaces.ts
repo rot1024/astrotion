@@ -44,6 +44,7 @@ export type Config = {
   title?: string;
   description?: string;
   dateFormat?: string;
+  postsPerPage?: number;
   og?: {
     siteImagePath?: string;
     baseImagePath?: string;
