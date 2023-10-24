@@ -15,3 +15,8 @@ export const NOTION_API_SECRET =
   import.meta.env.NOTION_API_SECRET || process.env.NOTION_API_SECRET || "";
 export const DATABASE_ID =
   import.meta.env.DATABASE_ID || process.env.DATABASE_ID || "";
+
+export const CACHE_DIR = "node_modules/.astro/.astrotion";
+export const ASSET_DIR = "static";
+export const CACHE_DIR_ASSETS = CACHE_DIR + "/" + ASSET_DIR;
+export const CACHE_DIR_NOTION = CACHE_DIR + "/notion-cache";

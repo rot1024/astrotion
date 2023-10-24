@@ -2,7 +2,7 @@
 dist/
 
 # generated types
-.astro/*
+.astro
 
 # dependencies
 node_modules/
@@ -22,8 +22,3 @@ pnpm-debug.log*
 
 # astrotion
 public/static
-!.astro/.astrotion/
-.astro/.astrotion/*
-!.astro/.astrotion/static/
-.astro/.astrotion/static/*
-!.astro/.astrotion/static/.gitkeep

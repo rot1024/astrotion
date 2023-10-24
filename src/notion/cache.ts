@@ -7,10 +7,10 @@ import type {
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
+import { CACHE_DIR_NOTION } from "../constants";
+
 import type { MinimalNotionClient } from "./minimal";
 import { expiresInForObjects, getLastEditedTime } from "./utils";
-
-const defaultBaseDir = "./.astro/.astrotion/notion-cache";
 
 export type Options = {
   base: MinimalNotionClient;
@@ -37,7 +37,7 @@ export class CacheClient {
     this.base = options.base;
     this.databaseId = options.databaseId;
     this.useFs = options?.useFs ?? false;
-    this.baseDir = options?.baseDir ?? defaultBaseDir;
+    this.baseDir = options?.baseDir ?? CACHE_DIR_NOTION;
     this.debug = options?.debug ?? false;
     if (this.useFs) {
       fs.mkdirSync(this.baseDir, { recursive: true });

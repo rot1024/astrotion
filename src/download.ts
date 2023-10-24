@@ -4,17 +4,17 @@ import path from "node:path";
 import { PromisePool } from "@supercharge/promise-pool";
 import sharp from "sharp";
 
+import { CACHE_DIR_ASSETS } from "./constants";
 import { debug, mergeMaps } from "./utils";
 
 const downloadConrurrency = 3;
-const assetsCacheDir = ".astro/.astrotion/static";
 
 export async function downloadImages(
   ...images: (Map<string, string> | undefined)[]
 ): Promise<void> {
   if (!images) return;
 
-  await fs.promises.mkdir(assetsCacheDir, { recursive: true });
+  await fs.promises.mkdir(CACHE_DIR_ASSETS, { recursive: true });
 
   const { errors } = await PromisePool.withConcurrency(downloadConrurrency)
     .for(mergeMaps(...images))
@@ -43,7 +43,7 @@ export async function downloadImages(
         "image optimized",
         localDest,
         `${body.byteLength} bytes -> ${optimzied.length} bytes`,
-        `(${Math.floor(optimzied.length / body.byteLength) * 100}%)`,
+        `(${Math.floor((optimzied.length / body.byteLength) * 100)}%)`,
       );
 
       await fs.promises.writeFile(localDest, optimzied);
