@@ -8,7 +8,7 @@ const config: Config = {
   navTitle: {
     classes: "font-bold",
   },
-  titleStyle: {
+  indexTitle: {
     fontFamily: "Londrina Solid, sans-serif",
     classes: "text-8xl",
   },

@@ -73,7 +73,7 @@ export type Config = {
     classes?: string;
     fontFamily?: string;
   };
-  titleStyle?: {
+  indexTitle?: {
     classes?: string;
     fontFamily?: string;
   };
