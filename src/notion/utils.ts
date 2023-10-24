@@ -210,4 +210,4 @@ export function fileUrlToAssetUrl(
   return newUrl;
 }
 
-export const assetsDir = "/assets";
+export const assetsDir = "/static";

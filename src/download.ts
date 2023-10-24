@@ -7,7 +7,7 @@ import sharp from "sharp";
 import { debug, mergeMaps } from "./utils";
 
 const downloadConrurrency = 3;
-const assetsCacheDir = ".astro/.astrotion/assets";
+const assetsCacheDir = ".astro/.astrotion/static";
 
 export async function downloadImages(
   ...images: (Map<string, string> | undefined)[]

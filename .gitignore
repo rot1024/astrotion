@@ -21,9 +21,9 @@ pnpm-debug.log*
 .DS_Store
 
 # astrotion
-public/assets
+public/static
 !.astro/.astrotion/
 .astro/.astrotion/*
-!.astro/.astrotion/assets/
-.astro/.astrotion/assets/*
-!.astro/.astrotion/assets/.gitkeep
+!.astro/.astrotion/static/
+.astro/.astrotion/static/*
+!.astro/.astrotion/static/.gitkeep

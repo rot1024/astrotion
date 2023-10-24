@@ -3,7 +3,7 @@ import fs from "node:fs";
 
 import type { AstroIntegration } from "astro";
 
-const assetsDir = "public/assets";
+const assetsDir = "public/static";
 
 export default (): AstroIntegration => ({
   name: "astrotion",

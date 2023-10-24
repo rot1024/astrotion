@@ -12,7 +12,7 @@ export function postUrl(slug: string, base?: string | URL): string {
 
 export function assetUrl(url: string, base?: string | URL): string {
   const filename = path.basename(url);
-  return getUrl(`/assets/${filename}`, base);
+  return getUrl(`/static/${filename}`, base);
 }
 
 export function getUrl(p: string, base?: string | URL): string {
