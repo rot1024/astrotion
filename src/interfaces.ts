@@ -1,7 +1,7 @@
 export type Client = {
   getAllPosts(): Promise<Post[]>;
-  getPostById(postId: string): Promise<Post>;
-  getPostBySlug(slug: string): Promise<Post>;
+  getPostById(postId: string): Promise<Post | undefined>;
+  getPostBySlug(slug: string): Promise<Post | undefined>;
   getPostContent(postId: string): Promise<PostContent>;
 };
 
@@ -10,6 +10,7 @@ export type Database = {
   description: string;
   icon?: string;
   cover?: string;
+  images?: Map<string, string>;
 };
 
 export type Post = {
@@ -25,6 +26,7 @@ export type Post = {
   icon?: string;
   cover?: string;
   featuredImage?: string;
+  images?: Map<string, string>;
 };
 
 export type PostContent = {

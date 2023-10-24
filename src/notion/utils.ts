@@ -194,10 +194,10 @@ export function expiresIn(
 export function fileUrlToAssetUrl(
   imageUrl: string | undefined,
 ): string | undefined {
-  if (!imageUrl) return undefined;
+  if (!imageUrl) return undefined; // should not download
 
   const url = new URL(imageUrl);
-  if (!url.searchParams.has("X-Amz-Expires")) return imageUrl;
+  if (!url.searchParams.has("X-Amz-Expires")) return undefined; // should not download
 
   const filename = url.pathname.split("/").at(-1);
   if (!filename) return imageUrl;

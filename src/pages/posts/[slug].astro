@@ -1,4 +1,5 @@
 ---
+import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
 import { assetUrl, postUrl } from "../../utils";
@@ -10,11 +11,12 @@ export async function getStaticPaths() {
   return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
 }
 
-const post = await client.getPostBySlug(slug);
+const database = await client.getDatabase();
+const post = slug ? await client.getPostBySlug(slug) : undefined;
 if (!post) throw new Error(`Post not found: ${slug}`);
 
 const content = post ? await client.getPostContent(post.id) : undefined;
-await client.downloadImages(content?.images);
+await downloadImages(content?.images, post?.images, database?.images);
 ---
 
 <Layout

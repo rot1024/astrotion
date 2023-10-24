@@ -1,12 +1,13 @@
-import fs from "node:fs";
-import path from "node:path";
-
 import type { QueryDatabaseParameters } from "@notionhq/client/build/src/api-endpoints";
-import { PromisePool } from "@supercharge/promise-pool";
 import { NotionToMarkdown } from "notion-to-md";
-import sharp from "sharp";
 
-import type { Database, Post, PostContent } from "../interfaces";
+import type {
+  Database,
+  Post,
+  PostContent,
+  Client as ClientType,
+} from "../interfaces";
+import { debug } from "../utils";
 
 import { buildDatabase, buildPost, isValidPage } from "./conv";
 import {
@@ -18,10 +19,7 @@ import {
 import { newNotionToMarkdown, type MinimalNotionClient } from "./minimal";
 import { getAll } from "./utils";
 
-const assetsCacheDir = ".astro/.astrotion/assets";
-const downloadConrurrency = 3;
-
-export class Client {
+export class Client implements ClientType {
   client: MinimalNotionClient;
   n2m: NotionToMarkdown;
   databaseId: string;
@@ -42,10 +40,7 @@ export class Client {
     const res = await this.client.databases.retrieve({
       database_id: this.databaseId,
     });
-    const { database } = buildDatabase(res);
-
-    // TODO: download images
-    return database;
+    return buildDatabase(res);
   }
 
   async getAllPosts(): Promise<Post[]> {
@@ -95,7 +90,7 @@ export class Client {
     return posts.find((post) => post.id === postId);
   }
 
-  async getPostBySlug(slug: string | undefined): Promise<Post | undefined> {
+  async getPostBySlug(slug: string): Promise<Post | undefined> {
     if (!slug) return undefined;
     const posts = await this.getAllPosts();
     return posts.find((post) => post.slug === slug);
@@ -120,52 +115,7 @@ export class Client {
     };
   }
 
-  async downloadImages(images: Map<string, string> | undefined): Promise<void> {
-    if (!images) return;
-
-    await fs.promises.mkdir(assetsCacheDir, { recursive: true });
-
-    const { errors } = await PromisePool.withConcurrency(downloadConrurrency)
-      .for(images)
-      .process(async ([imageUrl, localUrl]) => {
-        const localDest = path.join("public", localUrl);
-
-        if (await fs.promises.stat(localDest).catch(() => null)) {
-          this.#log(`download skipped: ${imageUrl} -> ${localDest}`);
-          return;
-        }
-
-        this.#log(`download: ${imageUrl} -> ${localDest}`);
-
-        const res = await fetch(imageUrl);
-        if (res.status !== 200) {
-          throw new Error(
-            `Failed to download ${imageUrl} due to statu code ${res.status}`,
-          );
-        }
-
-        const body = await res.arrayBuffer();
-
-        // optimize images
-        const optimzied = await sharp(body).rotate().webp().toBuffer();
-        this.#log(
-          "image optimized",
-          localDest,
-          `${body.byteLength} bytes -> ${optimzied.length} bytes`,
-          `(${Math.floor(optimzied.length / body.byteLength) * 100}%)`,
-        );
-
-        await fs.promises.writeFile(localDest, optimzied);
-      });
-
-    if (errors.length > 0) {
-      throw new Error(
-        `Failed to download images: ${errors.map((e) => e.message).join(", ")}`,
-      );
-    }
-  }
-
   #log(...args: any[]): void {
-    if (this.debug) console.debug("Client:", ...args);
+    debug("Client:", ...args);
   }
 }

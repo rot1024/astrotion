@@ -1,6 +1,6 @@
 ---
 import { PUBLIC_GA_TRACKING_ID } from "../constants";
-import defaultClient from "../notion";
+import client from "../notion";
 import { getUrl } from "../utils";
 import "prismjs/themes/prism-tomorrow.min.css";
 import "katex/dist/katex.min.css";
@@ -14,8 +14,7 @@ interface Props {
 
 const { title, description = "", path = "/", ogImage = "" } = Astro.props;
 
-const database = await defaultClient.getDatabase();
-
+const database = await client.getDatabase();
 const siteTitle = title ? `${title} - ${database.title}` : database.title;
 const siteDescription = description ? description : database.description;
 const siteURL = getUrl(path, Astro.site);

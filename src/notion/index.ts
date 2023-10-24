@@ -30,7 +30,12 @@ export async function initClient() {
     inited = true;
     await cacheClient
       .loadCache()
-      .then(() => defaultClient.getAllPosts().then(() => undefined));
+      .then(() =>
+        Promise.all([
+          defaultClient.getDatabase().then(() => undefined),
+          defaultClient.getAllPosts().then(() => undefined),
+        ]),
+      );
   } catch (e) {
     inited = false;
     throw e;

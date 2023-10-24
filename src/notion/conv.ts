@@ -11,33 +11,26 @@ import type { Database, Post } from "../interfaces";
 
 import { fileUrlToAssetUrl, type Properties } from "./utils";
 
-export function buildDatabase(res: GetDatabaseResponse): {
-  database: Database;
-  iconUrl?: string;
-  coverUrl?: string;
-  iconExpiryTime?: Date;
-  coverExpiryTime?: Date;
-} {
+export function buildDatabase(res: GetDatabaseResponse): Database {
   if (!("title" in res)) throw new Error("invalid database");
 
-  const { url: iconUrl, expiryTime: iconExpiryTime } =
-    getUrlFromIconAndCover(res.icon) ?? {};
-  const { url: coverUrl, expiryTime: coverExpiryTime } =
-    getUrlFromIconAndCover(res.cover) ?? {};
+  const { url: iconUrl } = getUrlFromIconAndCover(res.icon) ?? {};
+  const { url: coverUrl } = getUrlFromIconAndCover(res.cover) ?? {};
+  const iconAssetUrl = fileUrlToAssetUrl(iconUrl);
+  const coverAssetUrl = fileUrlToAssetUrl(iconUrl);
+
+  const images = new Map<string, string>();
+  if (iconUrl && iconAssetUrl) images.set(iconUrl, iconAssetUrl);
+  if (coverUrl && coverAssetUrl) images.set(coverUrl, coverAssetUrl);
 
   return {
-    database: {
-      title: res.title.map((text) => text.plain_text).join(""),
-      description: DISABLE_DB_DESCRIPTION
-        ? ""
-        : res.description.map((text) => text.plain_text).join(""),
-      icon: fileUrlToAssetUrl(iconUrl),
-      cover: fileUrlToAssetUrl(coverUrl),
-    },
-    iconUrl,
-    coverUrl,
-    iconExpiryTime,
-    coverExpiryTime,
+    title: res.title.map((text) => text.plain_text).join(""),
+    description: DISABLE_DB_DESCRIPTION
+      ? ""
+      : res.description.map((text) => text.plain_text).join(""),
+    icon: iconAssetUrl || iconUrl,
+    cover: coverAssetUrl || coverUrl,
+    images,
   };
 }
 
@@ -75,12 +68,22 @@ export function buildPost(pageObject: PageObjectResponse): {
     getUrlFromIconAndCover(cover) ?? {};
   const { url: featuredImageUrl, expiryTime: featuredImageExpiryTime } =
     getUrlFromIconAndCover(cover) ?? {};
+  const iconAssetUrl = fileUrlToAssetUrl(iconUrl);
+  const coverAssetUrl = fileUrlToAssetUrl(iconUrl);
+  const featuredImageAssetUrl = fileUrlToAssetUrl(featuredImageUrl);
+
+  const images = new Map<string, string>();
+  if (iconUrl && iconAssetUrl) images.set(iconUrl, iconAssetUrl);
+  if (coverUrl && coverAssetUrl) images.set(coverUrl, coverAssetUrl);
+  if (featuredImageUrl && featuredImageAssetUrl)
+    images.set(featuredImageUrl, featuredImageAssetUrl);
 
   const post: Post = {
     id: id,
     title: getRichText(properties.Page),
-    icon: fileUrlToAssetUrl(iconUrl),
-    cover: fileUrlToAssetUrl(coverUrl),
+    icon: iconAssetUrl || iconUrl,
+    cover: coverAssetUrl || coverUrl,
+    featuredImage: featuredImageAssetUrl || featuredImageUrl,
     slug: getRichText(properties.Slug),
     date:
       properties.Date.type === "date" ? properties.Date.date?.start ?? "" : "",
@@ -89,13 +92,12 @@ export function buildPost(pageObject: PageObjectResponse): {
         ? properties.Tags.multi_select
         : [],
     excerpt: getRichText(properties.Excerpt),
-    featuredImage: fileUrlToAssetUrl(featuredImageUrl),
     rank: properties.Rank.type === "number" ? properties.Rank.number ?? 0 : 0,
     updatedAt:
       properties.UpdatedAt.type === "last_edited_time"
         ? properties.UpdatedAt.last_edited_time
         : "",
-    raw: pageObject,
+    images,
   };
 
   return {
