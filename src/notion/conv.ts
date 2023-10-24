@@ -6,7 +6,7 @@ import type {
   PartialPageObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-import { DISABLE_DB_DESCRIPTION } from "../constants";
+import config from "../config";
 import type { Database, Post } from "../interfaces";
 
 import { fileUrlToAssetUrl, type Properties } from "./utils";
@@ -24,10 +24,10 @@ export function buildDatabase(res: GetDatabaseResponse): Database {
   if (coverUrl && coverAssetUrl) images.set(coverUrl, coverAssetUrl);
 
   return {
-    title: res.title.map((text) => text.plain_text).join(""),
-    description: DISABLE_DB_DESCRIPTION
-      ? ""
-      : res.description.map((text) => text.plain_text).join(""),
+    title: config.title || res.title.map((text) => text.plain_text).join(""),
+    description:
+      config.description ||
+      res.description.map((text) => text.plain_text).join(""),
     icon: iconAssetUrl || iconUrl,
     cover: coverAssetUrl || coverUrl,
     images,

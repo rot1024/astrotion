@@ -18,6 +18,7 @@ export default defineConfig({
     sitemap(),
     robotsTxt(),
   ],
+  vite: { optimizeDeps: { exclude: ["@resvg/resvg-js"] } },
 });
 
 function getSite() {

@@ -2,7 +2,7 @@
 import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
-import { assetUrl, postUrl } from "../../utils";
+import { postUrl } from "../../utils";
 
 const { slug } = Astro.params;
 
@@ -23,7 +23,7 @@ await downloadImages(content?.images, post?.images, database?.images);
   title={post.title}
   description={post.excerpt}
   path={postUrl(post.slug)}
-  ogImage={post.featuredImage ? assetUrl(post.featuredImage) : undefined}
+  ogImage={postUrl(post.slug + ".webp", Astro.site)}
 >
   <h1>{post.title}</h1>
   <main set:html={content?.html} />

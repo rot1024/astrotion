@@ -39,3 +39,14 @@ export type Tag = {
   name: string;
   color?: string;
 };
+
+export type Config = {
+  title?: string;
+  description?: string;
+  og?: {
+    siteImagePath?: string;
+    baseImagePath?: string;
+    fontColor?: string;
+    backgroundColor?: string;
+  };
+};
