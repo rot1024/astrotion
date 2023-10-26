@@ -35,7 +35,7 @@ await downloadImages(database?.images, ...posts.map((p) => p.images));
   <main class="py-12 lg:py-20">
     <article class="max-w-6xl mx-auto px-3">
       <header class="text-center mb-12">
-        <h1 class:list={["mb-12 text-6xl title", config.indexTitle?.classes]}>
+        <h1 class:list={["mb-12 text-6xl title", config.index?.titleClasses]}>
           {database.title}
         </h1>
         <p class="mx-auto max-w-xl">
@@ -49,7 +49,7 @@ await downloadImages(database?.images, ...posts.map((p) => p.images));
 </Layout>
 <style
   define:vars={{
-    titleFontFamily: config.indexTitle?.fontFamily || "inherit",
+    titleFontFamily: config.index?.titleFontFamily || "inherit",
   }}
 >
   .title {

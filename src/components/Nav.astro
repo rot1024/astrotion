@@ -12,14 +12,14 @@ const database = await client.getDatabase();
   >
     <a
       href={getUrl("/")}
-      class:list={["text-xl title", config.navTitle?.classes]}
+      class:list={["text-xl title", config.nav?.titleClasses]}
       >{database.title}</a
     >
   </div>
 </nav>
 <style
   define:vars={{
-    titleFontFamily: config.navTitle?.fontFamily || "inherit",
+    titleFontFamily: config.nav?.titleFontFamily || "inherit",
   }}
 >
   .title {

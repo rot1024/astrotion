@@ -68,22 +68,18 @@ export type Config = {
   };
   nav?: {
     classes?: string;
+    titleClasses?: string;
+    titleFontFamily?: string;
   };
-  navTitle?: {
-    classes?: string;
-    fontFamily?: string;
-  };
-  indexTitle?: {
-    classes?: string;
-    fontFamily?: string;
+  index?: {
+    titleClasses?: string;
+    titleFontFamily?: string;
   };
   post?: {
     classes?: string;
     fontFamily?: string;
-  };
-  postTitle?: {
-    classes?: string;
-    fontFamily?: string;
+    titleClasses?: string;
+    titleFontFamily?: string;
   };
   footer?: {
     content?: string;

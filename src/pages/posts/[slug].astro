@@ -29,7 +29,7 @@ await downloadImages(content?.images, post?.images, database?.images);
   <main class="py-12 lg:py-20">
     <article class="max-w-5xl mx-auto px-3">
       <header class="mx-auto pb-12 lg:pb-20 max-w-3xl text-center">
-        <h1 class:list={["text-5xl mb-6 title", config.postTitle?.classes]}>
+        <h1 class:list={["text-5xl mb-6 title", config.post?.titleClasses]}>
           {post.title}
         </h1>
         <p class="text-center">
@@ -59,7 +59,7 @@ await downloadImages(content?.images, post?.images, database?.images);
 </Layout>
 <style
   define:vars={{
-    titleFontFamily: config.indexTitle?.fontFamily || "inherit",
+    titleFontFamily: config.index?.titleFontFamily || "inherit",
     postFfontFamily: config.post?.fontFamily || "inherit",
   }}
 >
