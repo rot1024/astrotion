@@ -11,7 +11,6 @@ import { debug } from "../utils";
 
 import { buildDatabase, buildPost, isValidPage } from "./conv";
 import {
-  md2html,
   transformMdBlocks,
   transformMdImageBlock,
   transformMdLinkBlock,
@@ -105,10 +104,9 @@ export class Client implements ClientType {
       (block) => transformMdLinkBlock(block, posts),
     );
 
-    const mdString = this.n2m.toMarkdownString(transformed);
-    const file = await md2html.process(mdString.parent);
+    const markdown = this.n2m.toMarkdownString(transformed);
     return {
-      html: String(file),
+      markdown: markdown.parent,
       images,
     };
   }

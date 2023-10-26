@@ -3,6 +3,7 @@ import config from "../../config";
 import PostFooter from "../../customization/PostFooter.astro";
 import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
+import { markdownToHTML } from "../../markdown";
 import client from "../../notion";
 import { postUrl, formatPostDate } from "../../utils";
 
@@ -18,6 +19,7 @@ const post = slug ? await client.getPostBySlug(slug) : undefined;
 if (!post) throw new Error(`Post not found: ${slug}`);
 
 const content = post ? await client.getPostContent(post.id) : undefined;
+const html = content ? await markdownToHTML(content.markdown) : undefined;
 await downloadImages(content?.images, post?.images, database?.images);
 ---
 
@@ -53,7 +55,7 @@ await downloadImages(content?.images, post?.images, database?.images);
           "max-w-3xl mx-auto py-6 lg:py-12 markdown post",
           config.post?.classes,
         ]}
-        set:html={content?.html}
+        set:html={html}
       />
       <PostFooter post={post} database={database} />
     </article>

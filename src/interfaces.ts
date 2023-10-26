@@ -30,7 +30,7 @@ export type Post = {
 };
 
 export type PostContent = {
-  html: string;
+  markdown: string;
   images?: Map<string, string>;
 };
 
