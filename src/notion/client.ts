@@ -11,11 +11,12 @@ import { debug } from "../utils";
 
 import { buildDatabase, buildPost, isValidPage } from "./conv";
 import {
+  newNotionToMarkdown,
   transformMdBlocks,
   transformMdImageBlock,
   transformMdLinkBlock,
 } from "./markdown";
-import { newNotionToMarkdown, type MinimalNotionClient } from "./minimal";
+import { type MinimalNotionClient } from "./minimal";
 import { getAll } from "./utils";
 
 export class Client implements ClientType {
@@ -30,9 +31,9 @@ export class Client implements ClientType {
     debug?: boolean,
   ) {
     this.client = client;
-    this.n2m = newNotionToMarkdown(client, {});
     this.databaseId = databaseId;
     this.debug = debug || false;
+    this.n2m = newNotionToMarkdown(client);
   }
 
   async getDatabase(): Promise<Database> {

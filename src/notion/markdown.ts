@@ -1,8 +1,39 @@
+import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import { NotionToMarkdown } from "notion-to-md";
 import type { MdBlock } from "notion-to-md/build/types";
 
 import type { Post } from "../interfaces";
 
+import type { MinimalNotionClient } from "./minimal";
 import { fileUrlToAssetUrl } from "./utils";
+
+export function newNotionToMarkdown(
+  client: MinimalNotionClient,
+): NotionToMarkdown {
+  const n2m = new NotionToMarkdown({
+    notionClient: client as any,
+  });
+
+  n2m.setCustomTransformer("embed", (block) => {
+    const b = block as BlockObjectResponse;
+    if (b.type !== "embed") return false;
+    return b.embed.url;
+  });
+
+  n2m.setCustomTransformer("video", (block) => {
+    const b = block as BlockObjectResponse;
+    if (b.type !== "video" || b.video.type !== "external") return false;
+    return b.video.external.url;
+  });
+
+  n2m.setCustomTransformer("bookmark", (block) => {
+    const b = block as BlockObjectResponse;
+    if (b.type !== "bookmark") return false;
+    return b.bookmark.url;
+  });
+
+  return n2m;
+}
 
 export function transformMdBlocks(
   blocks: MdBlock[],

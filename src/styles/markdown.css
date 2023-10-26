@@ -106,3 +106,7 @@
 .markdown img {
   max-width: 100%;
 }
+
+.markdown .youtube {
+  @apply aspect-video w-full h-auto;
+}
