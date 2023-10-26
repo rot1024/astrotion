@@ -17,6 +17,10 @@ const config: Config = {
   footer: {
     content: "©︎ 2023 rot1024, All Rights Reserved.",
   },
+  notFound: {
+    titleClasses: "text-9xl",
+    titleFontFamily: "Londrina Solid, sans-serif",
+  },
 };
 
 export default config;

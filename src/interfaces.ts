@@ -85,4 +85,10 @@ export type Config = {
     content?: string;
     classes?: string;
   };
+  notFound?: {
+    titleClasses?: string;
+    titleFontFamily?: string;
+    title?: string;
+    description?: string;
+  };
 };
