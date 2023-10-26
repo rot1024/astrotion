@@ -1,5 +1,6 @@
 ---
 import config from "../../config";
+import PostFooter from "../../custom/PostFooter.astro";
 import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
@@ -54,6 +55,7 @@ await downloadImages(content?.images, post?.images, database?.images);
         ]}
         set:html={content?.html}
       />
+      <PostFooter post={post} database={database} />
     </article>
   </main>
 </Layout>
