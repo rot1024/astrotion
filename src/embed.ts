@@ -18,6 +18,6 @@ const youtube: Transformer = {
 
 export const transformers: Transformer<any>[] = [
   youtube,
-  codeSandboxTransformer,
-  oembedTransformer,
+  (codeSandboxTransformer as any).default as typeof codeSandboxTransformer,
+  (oembedTransformer as any).default as typeof oembedTransformer,
 ];

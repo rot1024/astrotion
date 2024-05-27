@@ -16,8 +16,7 @@ export const md2html = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkMath)
-  // remarkEmbedder reports type error
-  .use(remarkEmbedder as any, {
+  .use((remarkEmbedder as any).default as typeof remarkEmbedder, {
     transformers,
   })
   .use(remarkRehype, { allowDangerousHtml: true })
