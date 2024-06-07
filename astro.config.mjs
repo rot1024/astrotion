@@ -37,5 +37,5 @@ function getSite() {
     ).toString();
   }
 
-  return new URL(BASE_PATH, "http://localhost:3000").toString();
+  return;
 }
