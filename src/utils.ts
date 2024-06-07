@@ -42,7 +42,7 @@ export function mergeMaps<K, V>(
 
 export function debug(...args: any[]) {
   if (!DEBUG) return;
-  console.debug(...args);
+  console.debug("astrotion:", ...args);
 }
 
 export function formatPostDate(date: string): string {

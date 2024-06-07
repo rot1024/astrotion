@@ -16,8 +16,8 @@ export function buildDatabase(res: GetDatabaseResponse): Database {
 
   const { url: iconUrl } = getUrlFromIconAndCover(res.icon) ?? {};
   const { url: coverUrl } = getUrlFromIconAndCover(res.cover) ?? {};
-  const iconAssetUrl = fileUrlToAssetUrl(iconUrl);
-  const coverAssetUrl = fileUrlToAssetUrl(coverUrl);
+  const iconAssetUrl = fileUrlToAssetUrl(iconUrl, res.id + "_icon");
+  const coverAssetUrl = fileUrlToAssetUrl(coverUrl, res.id + "_cover");
 
   const images = new Map<string, string>();
   if (iconUrl && iconAssetUrl) images.set(iconUrl, iconAssetUrl);
@@ -58,9 +58,12 @@ export function buildPost(pageObject: PageObjectResponse): Post {
   const { url: coverUrl } = getUrlFromIconAndCover(cover) ?? {};
   const { url: featuredImageUrl } =
     getUrlFromIconAndCover(properties.FeaturedImage) ?? {};
-  const iconAssetUrl = fileUrlToAssetUrl(iconUrl);
-  const coverAssetUrl = fileUrlToAssetUrl(coverUrl);
-  const featuredImageAssetUrl = fileUrlToAssetUrl(featuredImageUrl);
+  const iconAssetUrl = fileUrlToAssetUrl(iconUrl, id + "_icon");
+  const coverAssetUrl = fileUrlToAssetUrl(coverUrl, id + "_cover");
+  const featuredImageAssetUrl = fileUrlToAssetUrl(
+    featuredImageUrl,
+    id + "_featured",
+  );
 
   const images = new Map<string, string>();
   if (iconUrl && iconAssetUrl) images.set(iconUrl, iconAssetUrl);

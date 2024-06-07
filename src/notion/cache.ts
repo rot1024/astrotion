@@ -12,13 +12,13 @@ import { CACHE_DIR_NOTION } from "../constants";
 import type { MinimalNotionClient } from "./minimal";
 import { /* expiresInForObjects, */ getLastEditedTime } from "./utils";
 
-export interface Options {
+export type Options = {
   base: MinimalNotionClient;
   databaseId: string;
   useFs?: boolean;
   baseDir?: string;
   debug?: boolean;
-}
+};
 
 export class CacheClient {
   base: MinimalNotionClient;

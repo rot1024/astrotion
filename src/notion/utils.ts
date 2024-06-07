@@ -192,6 +192,7 @@ export function expiresIn(
 
 export function fileUrlToAssetUrl(
   imageUrl: string | undefined,
+  id: string,
 ): string | undefined {
   if (!imageUrl) return undefined; // should not download
 
@@ -203,7 +204,11 @@ export function fileUrlToAssetUrl(
 
   // replace ext to webp
   const ext = path.extname(filename);
-  const finalFilename = ext ? filename.replace(ext, ".webp") : filename;
+  const filenameWithoutExt =
+    id || (ext ? filename.slice(0, -ext.length) : undefined);
+  const finalFilename = filenameWithoutExt
+    ? filenameWithoutExt + ".webp"
+    : filename;
 
   const newUrl = path.join(assetsDir, finalFilename);
   return newUrl;

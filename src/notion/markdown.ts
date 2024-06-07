@@ -61,7 +61,7 @@ export function transformMdImageBlock(
   const imageMarkdown = block.parent;
   const imageUrl = imageMarkdown.match(/!\[.*\]\((.*)\)/)?.[1];
   if (imageUrl) {
-    const newUrl = fileUrlToAssetUrl(imageUrl);
+    const newUrl = fileUrlToAssetUrl(imageUrl, block.blockId);
     if (newUrl && newUrl !== imageUrl) {
       imageUrls.set(imageUrl, newUrl);
       block.parent = block.parent.replace(imageUrl, newUrl);
