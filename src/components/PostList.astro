@@ -20,7 +20,7 @@ const { posts } = Astro.props;
         href={postUrl(p.slug)}
         title={p.title}
         body={p.excerpt}
-        image={p.featuredImage || postUrl(p.slug + ".webp")}
+        image={p.featuredImage || p.cover || postUrl(p.slug + ".webp")}
         date={formatPostDate(p.date)}
       />
     ))
