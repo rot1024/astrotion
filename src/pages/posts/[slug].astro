@@ -52,11 +52,11 @@ await downloadImages(content?.images, post?.images, database?.images);
       }
       <section
         class:list={[
-          "max-w-3xl mx-auto py-6 lg:py-12 markdown post",
+          "max-w-3xl mx-auto py-6 lg:py-12 post",
           config.post?.classes,
         ]}
       >
-        <Fragment set:html={html} />
+        <div class="markdown" set:html={html} />
         <PostFooter post={post} database={database} />
       </section>
     </article>
