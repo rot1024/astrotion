@@ -1,5 +1,7 @@
 import type { Config } from "./interfaces";
 
+const year = new Date().getFullYear();
+
 const config: Config = {
   googleFonts: "Londrina+Solid:wght@900",
   nav: {
@@ -15,7 +17,7 @@ const config: Config = {
     titleFontFamily: "Londrina Solid, sans-serif",
   },
   footer: {
-    content: "©︎ 2023 rot1024, All Rights Reserved.",
+    content: `©︎ ${year} AUTHOR, All Rights Reserved.`,
   },
   notFound: {
     titleClasses: "text-9xl",

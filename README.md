@@ -1,4 +1,4 @@
-# astrotion
+# Astrotion
 
 Astro + Notion + Blog
 
@@ -27,9 +27,7 @@ NOTE: This is not yet production-ready
 
 These files can be customized without concern for conflicts:
 
-- `src/config.ts`
 - `src/customization/*`
-- `tailwind.config.mjs`
 
 ## How to use
 
