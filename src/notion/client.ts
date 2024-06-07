@@ -7,7 +7,7 @@ import type {
   PostContent,
   Client as ClientType,
 } from "../interfaces";
-import { debug } from "../utils";
+// import { debug } from "../utils";
 
 import { buildDatabase, buildPost, isValidPage } from "./conv";
 import {
@@ -112,7 +112,7 @@ export class Client implements ClientType {
     };
   }
 
-  #log(...args: any[]): void {
-    debug("Client:", ...args);
-  }
+  // #log(...args: any[]): void {
+  //   debug("Client:", ...args);
+  // }
 }

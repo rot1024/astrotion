@@ -53,7 +53,6 @@ export async function getAll<T>(
   let results: T[] = [];
   let cursor: string | undefined = undefined;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const res = await getSingle(() => cb(cursor));
 
@@ -126,7 +125,7 @@ export function expiresIn(
   }
 
   if ("properties" in pageOrBlock && pageOrBlock.properties) {
-    for (const [_, prop] of Object.entries(pageOrBlock.properties)) {
+    for (const [, prop] of Object.entries(pageOrBlock.properties)) {
       if (prop.type === "files") {
         for (const file of prop.files) {
           if (file.type === "file") {

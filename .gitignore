@@ -22,3 +22,4 @@ pnpm-debug.log*
 
 # astrotion
 public/static
+.vscode/settings.json

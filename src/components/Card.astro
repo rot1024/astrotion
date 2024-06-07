@@ -1,11 +1,11 @@
 ---
-interface Props {
+type Props = {
   title: string;
   body: string;
   href: string;
   image?: string;
   date?: string;
-}
+};
 
 const { href, title, body, image, date: date } = Astro.props;
 ---

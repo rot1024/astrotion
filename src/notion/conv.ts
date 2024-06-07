@@ -98,8 +98,8 @@ function getRichText(p: Properties | undefined): string {
   return p.type === "rich_text"
     ? p.rich_text.map((richText) => richText.plain_text).join("")
     : p.type === "title" && p.title.length > 0
-    ? p.title[0].plain_text
-    : "";
+      ? p.title[0].plain_text
+      : "";
 }
 
 export function getUrlFromIconAndCover(
@@ -124,9 +124,11 @@ export function getUrlFromIconAndCover(
 
   if (iconOrCover?.type === "files") {
     const f = iconOrCover.files[0];
-    if (f.type === "external") return { url: f.external.url };
-    if (f.type === "file")
-      return { url: f.file.url, expiryTime: new Date(f.file.expiry_time) };
+    if (f) {
+      if (f.type === "external") return { url: f.external.url };
+      if (f.type === "file")
+        return { url: f.file.url, expiryTime: new Date(f.file.expiry_time) };
+    }
   }
 
   return;

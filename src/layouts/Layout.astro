@@ -10,12 +10,12 @@ import client from "../notion";
 import { getUrl } from "../utils";
 import "../styles/main.css";
 
-interface Props {
+type Props = {
   title?: string;
   description?: string;
   path?: string;
   ogImage?: string;
-}
+};
 
 const { title = "", description = "", path = "/", ogImage = "" } = Astro.props;
 
@@ -73,8 +73,8 @@ const siteOGImage = getUrl(
             src={`https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA_TRACKING_ID}`}
           />
           <script is:inline define:vars={{ trackingId: PUBLIC_GA_TRACKING_ID }}>
-            window.dataLayer = window.dataLayer || []; function gtag()
-            {dataLayer.push(arguments)}
+            window.dataLayer = window.dataLayer || []; function gtag(...args)
+            {dataLayer.push(args)}
             gtag('js', new Date()); gtag('config', trackingId);
           </script>
         </>
@@ -96,6 +96,7 @@ const siteOGImage = getUrl(
     }
     <script>
       import mermaid from "mermaid";
+
       mermaid.initialize({
         startOnLoad: true,
         theme: "neutral",

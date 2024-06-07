@@ -10,15 +10,15 @@ import type {
 import { CACHE_DIR_NOTION } from "../constants";
 
 import type { MinimalNotionClient } from "./minimal";
-import { expiresInForObjects, getLastEditedTime } from "./utils";
+import { /* expiresInForObjects, */ getLastEditedTime } from "./utils";
 
-export type Options = {
+export interface Options {
   base: MinimalNotionClient;
   databaseId: string;
   useFs?: boolean;
   baseDir?: string;
   debug?: boolean;
-};
+}
 
 export class CacheClient {
   base: MinimalNotionClient;
@@ -26,12 +26,12 @@ export class CacheClient {
   useFs: boolean;
   baseDir: string;
   debug: boolean;
-  blockChildrenListCache: Map<string, ListBlockChildrenResponse> = new Map();
-  databaseCache: Map<string, GetDatabaseResponse> = new Map();
-  databaseQueryCache: Map<string, QueryDatabaseResponse> = new Map();
-  updatedAtMap: Map<string, Date> = new Map();
-  cacheUpdatedAtMap: Map<string, Date> = new Map();
-  parentMap: Map<string, string> = new Map();
+  blockChildrenListCache = new Map<string, ListBlockChildrenResponse>();
+  databaseCache = new Map<string, GetDatabaseResponse>();
+  databaseQueryCache = new Map<string, QueryDatabaseResponse>();
+  updatedAtMap = new Map<string, Date>();
+  cacheUpdatedAtMap = new Map<string, Date>();
+  parentMap = new Map<string, string>();
 
   constructor(options: Options) {
     this.base = options.base;
@@ -196,7 +196,6 @@ export class CacheClient {
     let current = id;
     const ids = new Set<string>();
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       if (ids.has(current)) return; // circular reference
 
@@ -245,15 +244,15 @@ export class CacheClient {
     return ids;
   }
 
-  #pageCacheExpirationTime(pageId: string): Date | undefined {
-    const allPageAndBlocks = [pageId, ...this.allChildrenIds(pageId)];
-    const allCache = allPageAndBlocks
-      .map((id) => this.blockChildrenListCache.get(id))
-      .flatMap((res) => res?.results ?? []);
-    return expiresInForObjects(allCache);
-  }
+  // #pageCacheExpirationTime(pageId: string): Date | undefined {
+  //   const allPageAndBlocks = [pageId, ...this.allChildrenIds(pageId)];
+  //   const allCache = allPageAndBlocks
+  //     .map((id) => this.blockChildrenListCache.get(id))
+  //     .flatMap((res) => res?.results ?? []);
+  //   return expiresInForObjects(allCache);
+  // }
 
   #log(...args: any[]) {
-    if (this.debug) console.debug("CacheClient:", ...args);
+    if (this.debug) console.debug("astrotion: cache:", ...args);
   }
 }

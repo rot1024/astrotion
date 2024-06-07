@@ -247,7 +247,7 @@ const databaseQueryRes = (
 });
 
 const blockQueryRes = (
-  id: string = "blockId",
+  id = "blockId",
   last_edited_time: string = defaultLastEditedTime,
 ): ListBlockChildrenResponse => ({
   object: "list",

@@ -3,12 +3,12 @@ import Card from "../components/Card.astro";
 import type { Post } from "../interfaces";
 import { formatPostDate, postUrl } from "../utils";
 
-export interface Props {
+export type Props = {
   posts: Post[];
   page?: number;
   pageSize?: number;
   total?: number;
-}
+};
 
 const { posts } = Astro.props;
 ---
