@@ -37,6 +37,7 @@ test("expiresIn", () => {
         expiry_time: exp.toISOString(),
       },
     },
+    in_trash: false,
   });
 
   expect(
@@ -64,6 +65,7 @@ test("expiresIn", () => {
         color: "default",
         rich_text: [],
       },
+      in_trash: false,
     } satisfies ParagraphBlockObjectResponse),
   ).toBeUndefined();
 
