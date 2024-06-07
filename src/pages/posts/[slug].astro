@@ -55,9 +55,10 @@ await downloadImages(content?.images, post?.images, database?.images);
           "max-w-3xl mx-auto py-6 lg:py-12 markdown post",
           config.post?.classes,
         ]}
-        set:html={html}
-      />
-      <PostFooter post={post} database={database} />
+      >
+        <Fragment set:html={html} />
+        <PostFooter post={post} database={database} />
+      </section>
     </article>
   </main>
 </Layout>
