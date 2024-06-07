@@ -21,6 +21,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
 };
 
+const imageWidth = 1200;
+const imageHeight = 630;
+const imagePadding = 80;
+const fontSize = 60;
+const lineHeight = 80;
+
 export const GET: APIRoute<Props> = async ({ params }) => {
   const post = await client.getPostBySlug(params.slug || "");
   if (!post) throw new Error("Post not found");
@@ -34,29 +40,28 @@ export const GET: APIRoute<Props> = async ({ params }) => {
               buffer: ogBaseBuffer,
               x: 0,
               y: 0,
-              width: 1200,
-              height: 630,
+              width: imageWidth,
+              height: imageHeight,
             },
           ]
         : []),
       {
         type: "textBox",
         text: post.title,
-        x: 0,
-        y: 275,
-        width: 1200,
+        x: imagePadding,
+        y: imagePadding,
+        // y: imageHeight / 2 - lineHeight,
+        width: imageWidth - imagePadding * 2,
         fontFamily: [...fonts.map((font) => font.name)],
-        fontSize: 60,
-        lineHeight: 80,
-        lineClamp: 1,
-        align: "center",
+        fontSize,
+        lineHeight,
         color: "#000",
         ...config.og?.titleStyle,
       },
     ],
     {
-      width: 1200,
-      height: 630,
+      width: imageWidth,
+      height: imageHeight,
       fonts: [...fonts],
       background: config.og?.backgroundColor || "#fff",
     },
