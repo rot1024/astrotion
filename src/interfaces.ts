@@ -45,6 +45,9 @@ export type Config = {
   description?: string;
   dateFormat?: string;
   postsPerPage?: number;
+  head?: {
+    titleSeparator?: string;
+  };
   og?: {
     siteImagePath?: string;
     baseImagePath?: string;

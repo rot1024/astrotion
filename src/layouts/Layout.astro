@@ -20,7 +20,9 @@ type Props = {
 const { title = "", description = "", path = "/", ogImage = "" } = Astro.props;
 
 const database = await client.getDatabase();
-const siteTitle = title ? `${title} - ${database.title}` : database.title;
+const siteTitle = title
+  ? `${title}${config.head?.titleSeparator || " | "}${database.title}`
+  : database.title;
 const siteDescription = description ? description : database.description;
 const siteURL = getUrl(path, Astro.site);
 const siteOGImage = getUrl(
