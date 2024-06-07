@@ -107,6 +107,10 @@
   max-width: 100%;
 }
 
+.markdown figcaption {
+  @apply text-sm text-gray-500 mt-2;
+}
+
 .markdown .youtube {
   @apply aspect-video w-full h-auto;
 }

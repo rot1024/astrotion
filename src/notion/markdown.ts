@@ -1,6 +1,9 @@
 import type { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { NotionToMarkdown } from "notion-to-md";
-import type { MdBlock } from "notion-to-md/build/types";
+import type {
+  ListBlockChildrenResponseResult,
+  MdBlock,
+} from "notion-to-md/build/types";
 
 import type { Post } from "../interfaces";
 
@@ -13,6 +16,8 @@ export function newNotionToMarkdown(
   const n2m = new NotionToMarkdown({
     notionClient: client as any,
   });
+
+  n2m.setCustomTransformer("image", imageTransformer);
 
   n2m.setCustomTransformer("embed", (block) => {
     const b = block as BlockObjectResponse;
@@ -33,6 +38,31 @@ export function newNotionToMarkdown(
   });
 
   return n2m;
+}
+
+function imageTransformer(
+  block: ListBlockChildrenResponseResult,
+): string | boolean {
+  const b = block as BlockObjectResponse;
+  if (b.type !== "image") return false;
+
+  let link = "";
+  if (b.image.type === "external") {
+    link = b.image.external.url;
+  } else if (b.image.type === "file") {
+    link = b.image.file.url;
+  }
+
+  let alt = "";
+  const caption = b.image.caption
+    .map((item) => item.plain_text)
+    .join("")
+    .trim();
+  if (caption.length > 0) {
+    alt = caption;
+  }
+
+  return link ? `![${alt}](${link})` : false;
 }
 
 export function transformMdBlocks(

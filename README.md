@@ -27,6 +27,7 @@ NOTE: This is not yet production-ready
 
 These files can be customized without concern for conflicts:
 
+- `public/*`
 - `src/customization/*`
 
 ## How to use
