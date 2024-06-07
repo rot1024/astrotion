@@ -39,6 +39,7 @@
     "mermaid": "^10.9.1",
     "notion-to-md": "^3.1.1",
     "prismjs": "^1.29.0",
+    "rehype-external-links": "^3.0.0",
     "rehype-katex": "^7.0.0",
     "rehype-mermaid": "^2.1.0",
     "rehype-prism-plus": "^2.0.0",
