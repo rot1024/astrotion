@@ -1,0 +1,25 @@
+---
+import type { Tag } from "../interfaces";
+
+export type Props = {
+  tags: Tag[];
+  base?: string;
+};
+
+const { tags, base = "" } = Astro.props;
+---
+
+{
+  tags.length === 0 ? null : (
+    <section class="flex space-x-2 pt-6">
+      {tags.map((tag) => (
+        <a
+          href={`${base}/tags/${tag.name}`}
+          class="px-2.5 py-0.5 rounded border border-black hover:underline"
+        >
+          {tag.name}
+        </a>
+      ))}
+    </section>
+  )
+}

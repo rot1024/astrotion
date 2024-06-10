@@ -15,9 +15,16 @@ type Props = {
   description?: string;
   path?: string;
   ogImage?: string;
+  rssUrl?: string;
 };
 
-const { title = "", description = "", path = "/", ogImage = "" } = Astro.props;
+const {
+  title = "",
+  description = "",
+  path = "/",
+  ogImage = "",
+  rssUrl = "",
+} = Astro.props;
 
 const database = await client.getDatabase();
 const siteTitle = title
@@ -55,7 +62,7 @@ const siteOGImage = getUrl(
     <link
       rel="alternate"
       type="application/rss+xml"
-      href={getUrl("/rss.xml")}
+      href={getUrl(rssUrl || "/rss.xml")}
       title="RSS2.0"
     />
     {

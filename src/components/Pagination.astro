@@ -2,12 +2,13 @@
 export type Props = {
   page: number;
   pageCount: number;
+  base?: string;
 };
 
-const { page, pageCount } = Astro.props;
+const { page, pageCount, base } = Astro.props;
 
-function getPageUrl(page: number): string {
-  return page === 1 ? "/" : `/pages/${page}`;
+function getPageUrl(page: number, base = ""): string {
+  return base + (page === 1 ? "/" : `/pages/${page}`);
 }
 
 // https://gist.github.com/kottenator/9d936eb3e4e3c3e02598
@@ -46,15 +47,15 @@ const nextPage: number | undefined = page < pageCount ? page + 1 : undefined;
 ---
 
 <section class="flex space-x-8 justify-center text-xl pt-16 font-bold">
-  {prevPage && <a href={getPageUrl(prevPage)}>&larr; Prev</a>}
+  {prevPage && <a href={getPageUrl(prevPage, base)}>&larr; Prev</a>}
   {
     pages.map((p) =>
       isNaN(p) || p === page ? (
         <span class="font-normal text-gray-600">{isNaN(p) ? "..." : p}</span>
       ) : (
-        <a href={getPageUrl(p)}>{p}</a>
+        <a href={getPageUrl(p, base)}>{p}</a>
       ),
     )
   }
-  {nextPage && <a href={getPageUrl(nextPage)}>Next &rarr;</a>}
+  {nextPage && <a href={getPageUrl(nextPage, base)}>Next &rarr;</a>}
 </section>

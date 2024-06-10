@@ -7,10 +7,6 @@ import Layout from "../../layouts/Layout.astro";
 import client from "../../notion";
 import { paginate } from "../../utils";
 
-export type Props = {
-  page?: string;
-};
-
 export async function getStaticPaths() {
   const posts = await client.getAllPosts();
   const { pageCount } = paginate(posts, "1");

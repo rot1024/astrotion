@@ -1,0 +1,64 @@
+---
+import Pagination from "../../../../components/Pagination.astro";
+import PostList from "../../../../components/PostList.astro";
+import config from "../../../../config";
+import { downloadImages } from "../../../../download";
+import Layout from "../../../../layouts/Layout.astro";
+import client from "../../../../notion";
+import { paginate } from "../../../../utils";
+
+export async function getStaticPaths() {
+  const posts = await client.getAllPosts();
+  const tags = new Map<string, number>();
+  posts.forEach((post) =>
+    post.tags.forEach((tag) => {
+      tags.set(tag.name, (tags.get(tag.name) || 0) + 1);
+    }),
+  );
+
+  return Array.from(tags).flatMap(([name, count]) => {
+    const pageCount = Math.ceil(count / (config.postsPerPage || 20));
+    return Array.from({ length: pageCount }, (_, i) => ({
+      params: { tag: name, page: (i + 1).toString() },
+    }));
+  });
+}
+
+const { page, tag } = Astro.params;
+const [database, posts] = await Promise.all([
+  client.getDatabase(),
+  client.getAllPosts(),
+]);
+
+const filteredPosts = posts.filter((post) =>
+  post.tags.some((t) => t.name === tag),
+);
+const { pageCount, pageInt, pagePosts } = paginate(filteredPosts, page);
+await downloadImages(database?.images, ...filteredPosts.map((p) => p.images));
+---
+
+<Layout rssUrl=`/tags/${tag}/rss.xml`>
+  <main class="py-12 lg:py-20">
+    <article class="max-w-6xl mx-auto px-3">
+      <header class="text-center mb-12">
+        <h1 class:list={["mb-12 text-6xl title", config.index?.titleClasses]}>
+          {database.title}
+        </h1>
+        <p class="mx-auto max-w-xl">
+          {tag} - Page {pageInt} of {pageCount}
+        </p>
+      </header>
+      <PostList posts={pagePosts} />
+      <Pagination page={pageInt} pageCount={pageCount} base={`/tags/${tag}`} />
+    </article>
+  </main>
+</Layout>
+<style
+  define:vars={{
+    titleFontFamily: config.index?.titleFontFamily || "inherit",
+  }}
+>
+  .title {
+    font-family: var(--titleFontFamily);
+  }
+</style>

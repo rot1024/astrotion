@@ -39,6 +39,5 @@ astrotion was inspired by [astro-notion-blog](https://github.com/otoyo/astro-not
 - [ ] Fix links to pages in paragraph blocks
 - [ ] Support toggle blocks
 - [ ] Support embed and bookmark blocks
-- [ ] Tags
 - [ ] Search
 - [ ] Related Posts
