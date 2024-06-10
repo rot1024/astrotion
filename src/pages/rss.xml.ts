@@ -14,7 +14,7 @@ export async function GET() {
     description: db.description,
     site: import.meta.env.SITE,
     items: posts.map((post) => ({
-      link: new URL(postUrl(post.slug), import.meta.env.SITE).toString(),
+      link: postUrl(post.slug),
       title: post.title,
       description: post.excerpt,
       pubDate: new Date(post.date),

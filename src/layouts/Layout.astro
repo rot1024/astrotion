@@ -52,6 +52,12 @@ const siteOGImage = getUrl(
     <link rel="icon" type="image/svg+xml" href={getUrl("/favicon.svg")} />
     <link rel="sitemap" href={getUrl("/sitemap-index.xml")} />
     <link rel="canonical" href={siteURL} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      href={getUrl("/rss.xml")}
+      title="RSS2.0"
+    />
     {
       config?.googleFonts && (
         <GoogleFontsOptimizer
