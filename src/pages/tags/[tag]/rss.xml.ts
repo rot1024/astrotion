@@ -1,12 +1,26 @@
 import rss from "@astrojs/rss";
 
-import defaultClient from "../../../notion";
+import client from "../../../notion";
 import { postUrl } from "../../../utils";
+
+export async function getStaticPaths() {
+  const posts = await client.getAllPosts();
+  const tags = new Set<string>();
+  posts.forEach((post) =>
+    post.tags.forEach((tag) => {
+      tags.add(tag.name);
+    }),
+  );
+
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+  }));
+}
 
 export async function GET({ params }: { params: { tag: string } }) {
   const [posts, db] = await Promise.all([
-    defaultClient.getAllPosts(),
-    defaultClient.getDatabase(),
+    client.getAllPosts(),
+    client.getDatabase(),
   ]);
 
   return rss({
