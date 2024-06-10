@@ -10,7 +10,7 @@ const config: Config = {
   },
   index: {
     titleFontFamily: "Londrina Solid, sans-serif",
-    titleClasses: "text-8xl",
+    titleClasses: "text-7xl md:text-8xl",
   },
   post: {
     titleClasses: "text-6xl",
