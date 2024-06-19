@@ -1,4 +1,5 @@
 ---
+import { GoogleAnalytics } from "astro-analytics";
 import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import "prismjs/themes/prism.min.css";
 import "katex/dist/katex.min.css";
@@ -72,6 +73,7 @@ const siteOGImage = getUrl(
         />
       )
     }
+    {PUBLIC_GA_TRACKING_ID && <GoogleAnalytics id={PUBLIC_GA_TRACKING_ID} />}
   </head>
   <body
     class:list={[
@@ -79,22 +81,6 @@ const siteOGImage = getUrl(
       config.body?.classes,
     ]}
   >
-    {
-      PUBLIC_GA_TRACKING_ID && (
-        <>
-          <script
-            is:inline
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${PUBLIC_GA_TRACKING_ID}`}
-          />
-          <script is:inline define:vars={{ trackingId: PUBLIC_GA_TRACKING_ID }}>
-            window.dataLayer = window.dataLayer || []; function gtag(...args)
-            {dataLayer.push(args)}
-            gtag('js', new Date()); gtag('config', trackingId);
-          </script>
-        </>
-      )
-    }
     <Nav />
     <slot />
     {

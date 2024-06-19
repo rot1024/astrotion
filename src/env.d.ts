@@ -8,3 +8,7 @@ declare module "@microflash/rehype-figure" {
   const rehypeFigure: Plugin;
   export default rehypeFigure;
 }
+
+declare module "astro-analytics" {
+  export function GoogleAnalytics(props: { id?: string }): any;
+}
