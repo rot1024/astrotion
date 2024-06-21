@@ -13,6 +13,10 @@
   @apply mb-5;
 }
 
+.markdown li {
+  font-size: inherit;
+}
+
 .markdown li + li {
   @apply mt-1;
 }
@@ -74,11 +78,11 @@
 }
 
 .markdown ul {
-  @apply text-base pl-8 list-disc;
+  @apply pl-8 list-disc;
 }
 
 .markdown ol {
-  @apply text-base pl-8 list-decimal;
+  @apply pl-8 list-decimal;
 }
 
 .markdown kbd {
