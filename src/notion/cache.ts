@@ -88,20 +88,22 @@ export class CacheClient {
     children: {
       list: async (args) => {
         const blockId = args.block_id;
+        const cursor = args.start_cursor;
+        const key = cacheKey(blockId, cursor);
 
         if (this.#canUseCache(blockId)) {
-          const blocks = this.blockChildrenListCache.get(blockId);
+          const blocks = this.blockChildrenListCache.get(key);
           if (blocks) {
-            this.#log("use cache: blocks for " + blockId);
+            this.#log(`use blocks cache: id=${blockId}, cursor=${cursor}`);
             return blocks;
           }
         }
 
-        this.#log("load blocks " + blockId);
+        this.#log(`fetch blocks: id=${blockId}, cursor=${cursor}`);
         const res = await this.base.blocks.children.list(args);
 
         // update cache
-        this.blockChildrenListCache.set(blockId, res);
+        this.blockChildrenListCache.set(key, res);
         const blockUpdatedAt = this.updatedAtMap.get(blockId);
         if (blockUpdatedAt) {
           this.cacheUpdatedAtMap.set(blockId, blockUpdatedAt);
@@ -114,7 +116,7 @@ export class CacheClient {
         }
 
         await this.#writeMetaCache();
-        await this.#writeCache(`blocks-${blockId}.json`, res);
+        await this.#writeCache(`blocks-${key}.json`, res);
 
         return res;
       },
@@ -134,8 +136,8 @@ export class CacheClient {
 
       const data = await this.#readCache(file);
       if (file.startsWith("blocks-")) {
-        const id = file.replace("blocks-", "").replace(".json", "");
-        this.blockChildrenListCache.set(id, data);
+        const key = file.replace("blocks-", "").replace(".json", "");
+        this.blockChildrenListCache.set(key, data);
       } else if (file.startsWith("meta")) {
         const { updatedAt, parents } = data;
         this.cacheUpdatedAtMap = new Map(
@@ -180,7 +182,7 @@ export class CacheClient {
     this.#log(
       "validate cache:",
       blockId,
-      canUse ? "OK" : "EXPIRED",
+      canUse ? "HIT" : "EXPIRED",
       "let:", // Last edited time
       updatedAt,
       "cache:",
@@ -255,4 +257,8 @@ export class CacheClient {
   #log(...args: any[]) {
     if (this.debug) console.debug("astrotion: cache:", ...args);
   }
+}
+
+function cacheKey(id: string, cursor?: string): string {
+  return cursor ? `${id}_${cursor}` : id;
 }
