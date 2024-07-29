@@ -14,7 +14,7 @@ import "../styles/main.css";
 type Props = {
   title?: string;
   description?: string;
-  path?: string;
+  canonicalUrl?: string;
   ogImage?: string;
   rssUrl?: string;
 };
@@ -22,7 +22,7 @@ type Props = {
 const {
   title = "",
   description = "",
-  path = "/",
+  canonicalUrl = "",
   ogImage = "",
   rssUrl = "",
 } = Astro.props;
@@ -32,7 +32,7 @@ const siteTitle = title
   ? `${title}${config.head?.titleSeparator || " | "}${database.title}`
   : database.title;
 const siteDescription = description ? description : database.description;
-const siteURL = getUrl(path, Astro.site);
+const siteURL = canonicalUrl ? new URL(canonicalUrl) : Astro.url;
 const siteOGImage = getUrl(
   database.cover || config.og?.siteImagePath || "og-image.png",
   Astro.site,

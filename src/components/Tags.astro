@@ -14,7 +14,7 @@ const { tags, base = "" } = Astro.props;
     <section class="flex space-x-2 pt-6">
       {tags.map((tag) => (
         <a
-          href={`${base}/tags/${tag.name}`}
+          href={`${base}/tags/${tag.name}/`}
           class="px-2.5 py-0.5 rounded border border-black hover:underline"
         >
           {tag.name}

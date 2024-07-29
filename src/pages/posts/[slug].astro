@@ -27,7 +27,6 @@ await downloadImages(content?.images, post?.images, database?.images);
 <Layout
   title={post.title}
   description={post.excerpt}
-  path={postUrl(post.slug)}
   ogImage={postUrl(post.slug + ".webp", Astro.site)}
 >
   <main class="py-12 lg:py-20">
