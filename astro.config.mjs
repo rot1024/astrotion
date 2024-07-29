@@ -12,6 +12,7 @@ export default defineConfig({
   base: BASE_PATH,
   integrations: [astrotion(), tailwind(), sitemap(), robotsTxt()],
   vite: { optimizeDeps: { exclude: ["@resvg/resvg-js"] } },
+  trailingSlash: "always",
 });
 
 function getSite() {
