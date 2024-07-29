@@ -23,7 +23,7 @@ export const md2html = unified()
   .use(remarkParse)
   .use(cjkEmphasis)
   .use(remarkGfm)
-  .use(remarkMath)
+  .use(remarkMath, { singleDollarTextMath: false })
   .use((remarkEmbedder as any).default as typeof remarkEmbedder, {
     transformers,
   })
