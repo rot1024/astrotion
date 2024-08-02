@@ -47,16 +47,17 @@ export class CacheClient {
   databases: MinimalNotionClient["databases"] = {
     query: async (args) => {
       const databaseId = args.database_id;
+      const key = cacheKey(databaseId, args.start_cursor);
 
-      const cache = this.databaseQueryCache.get(databaseId);
+      const cache = this.databaseQueryCache.get(key);
       if (cache) {
-        this.#log("use cache: database query for " + databaseId);
+        this.#log("use cache: database query for " + key);
         return cache;
       }
 
-      this.#log("query databases " + databaseId);
+      this.#log("query databases " + key);
       const res = await this.base.databases.query(args);
-      this.databaseQueryCache.set(databaseId, res);
+      this.databaseQueryCache.set(key, res);
 
       for (const p of res.results) {
         const lastEditedTime = getLastEditedTime(p);
