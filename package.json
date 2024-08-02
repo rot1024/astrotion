@@ -15,6 +15,7 @@
     "test": "vitest",
     "lint": "eslint . --fix",
     "format": "prettier . --write",
+    "check": "prettier . --check",
     "typecheck": "tsc",
     "postinstall": "symlink-dir node_modules/.astro/.astrotion/static public/static"
   },
