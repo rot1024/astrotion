@@ -7,7 +7,10 @@ import { BASE_PATH, DEBUG } from "./constants";
 import type { Post } from "./interfaces";
 
 export function postUrl(slug: string, base?: string | URL): string {
-  return getUrl(`/posts/${slug}/`, base);
+  if (!path.extname(slug)) {
+    slug += "/";
+  }
+  return getUrl(`/posts/${slug}`, base);
 }
 
 export function assetUrl(url: string, base?: string | URL): string {
@@ -26,7 +29,7 @@ export function getUrl(p: string, base?: string | URL): string {
 
   // extension is not included, add slash
   if (!path.extname(p)) {
-    p = path.join(p, "");
+    p += "/";
   }
 
   return path.join(BASE_PATH, p);
