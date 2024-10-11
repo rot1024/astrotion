@@ -31,12 +31,12 @@ const { database, post, html } = await client.getPost(slug);
         </p>
       </header>
       {
-        post.featuredImage && (
+        (post.cover || post.featuredImage) && (
           <img
             class="rounded-xl mx-auto aspect-video object-cover"
             style="min-width: 80%;"
             loading="lazy"
-            src={post.featuredImage}
+            src={post.cover || post.featuredImage}
             alt={post.title}
           />
         )
