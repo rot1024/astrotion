@@ -1,4 +1,4 @@
-import type { Config } from "./interfaces";
+import type { Config } from "./lib/interfaces";
 
 const year = new Date().getFullYear();
 

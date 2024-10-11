@@ -1,12 +1,11 @@
 import rss from "@astrojs/rss";
 
-import defaultClient from "../notion";
-import { postUrl } from "../utils";
+import { client, postUrl } from "../lib";
 
 export async function GET() {
   const [posts, db] = await Promise.all([
-    defaultClient.getAllPosts(),
-    defaultClient.getDatabase(),
+    client.getAllPosts(),
+    client.getDatabase(),
   ]);
 
   return rss({

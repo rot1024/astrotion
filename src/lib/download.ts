@@ -4,7 +4,8 @@ import path from "node:path";
 import { PromisePool } from "@supercharge/promise-pool";
 import sharp from "sharp";
 
-import { CACHE_DIR_ASSETS } from "./constants";
+import { CACHE_DIR_ASSETS } from "../constants";
+
 import { debug, mergeMaps } from "./utils";
 
 const downloadConrurrency = 3;

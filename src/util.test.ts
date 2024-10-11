@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { getUrl, postUrl } from "./utils";
+import { getUrl, postUrl } from "./lib/utils";
 
 test("getUrl", () => {
   expect.soft(getUrl("aaa.webp")).toBe("aaa.webp");

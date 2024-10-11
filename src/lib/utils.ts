@@ -2,8 +2,9 @@ import path from "node:path";
 
 import { format } from "date-fns";
 
-import config from "./config";
-import { BASE_PATH, DEBUG } from "./constants";
+import config from "../config";
+import { BASE_PATH, DEBUG } from "../constants";
+
 import type { Post } from "./interfaces";
 
 export function postUrl(slug: string, base?: string | URL): string {
@@ -71,3 +72,29 @@ export function paginate(posts: Post[], page: string) {
     pageSize,
   };
 }
+
+export function fileUrlToAssetUrl(
+  imageUrl: string | undefined,
+  id: string,
+): string | undefined {
+  if (!imageUrl) return undefined; // should not download
+
+  const url = new URL(imageUrl);
+  if (!url.searchParams.has("X-Amz-Expires")) return undefined; // should not download
+
+  const filename = url.pathname.split("/").at(-1);
+  if (!filename) return imageUrl;
+
+  // replace ext to webp
+  const ext = path.extname(filename);
+  const filenameWithoutExt =
+    id || (ext ? filename.slice(0, -ext.length) : undefined);
+  const finalFilename = filenameWithoutExt
+    ? filenameWithoutExt + ".webp"
+    : filename;
+
+  const newUrl = path.join(assetsDir, finalFilename);
+  return newUrl;
+}
+
+export const assetsDir = "/static";

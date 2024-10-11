@@ -202,10 +202,12 @@ test("CacheClient", async () => {
 
 test("allChildrenIds", async () => {
   const base = baseClient();
+  const tmp = await tmpdir();
   const client = new CacheClient({
     base,
     databaseId: "databaseId",
     useFs: false,
+    baseDir: tmp,
   });
   await client.databases.query({
     database_id: "databaseId",

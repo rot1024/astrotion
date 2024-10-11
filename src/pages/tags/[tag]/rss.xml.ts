@@ -1,7 +1,6 @@
 import rss from "@astrojs/rss";
 
-import client from "../../../notion";
-import { postUrl } from "../../../utils";
+import { postUrl, client } from "../../../lib";
 
 export async function getStaticPaths() {
   const posts = await client.getAllPosts();

@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { markdownToHTML } from "./markdown";
+import { markdownToHTML } from "./md2html";
 
 test("markdown strong and em", async () => {
   const md = "**「あああ！」**と__AAA！__と";

@@ -1,7 +1,6 @@
 ---
 import config from "../config";
-import client from "../notion";
-import { getUrl } from "../utils";
+import { client, getUrl } from "../lib";
 
 const database = await client.getDatabase();
 ---

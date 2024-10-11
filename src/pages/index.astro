@@ -2,18 +2,10 @@
 import Pagination from "../components/Pagination.astro";
 import PostList from "../components/PostList.astro";
 import config from "../config";
-import { downloadImages } from "../download";
 import Layout from "../layouts/Layout.astro";
-import client from "../notion";
-import { paginate } from "../utils";
+import { client } from "../lib";
 
-const [database, posts] = await Promise.all([
-  client.getDatabase(),
-  client.getAllPosts(),
-]);
-
-const { pageCount, pageInt, pagePosts } = paginate(posts, "1");
-await downloadImages(database?.images, ...posts.map((p) => p.images));
+const { database, pageCount, pageInt, posts } = await client.listPosts("1");
 ---
 
 <Layout>
@@ -27,7 +19,7 @@ await downloadImages(database?.images, ...posts.map((p) => p.images));
           {database.description}
         </p>
       </header>
-      <PostList posts={pagePosts} />
+      <PostList posts={posts} />
       <Pagination page={pageInt} pageCount={pageCount} />
     </article>
   </main>

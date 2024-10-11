@@ -2,11 +2,8 @@
 import Tags from "../../components/Tags.astro";
 import config from "../../config";
 import PostFooter from "../../customization/PostFooter.astro";
-import { downloadImages } from "../../download";
 import Layout from "../../layouts/Layout.astro";
-import { markdownToHTML } from "../../markdown";
-import client from "../../notion";
-import { postUrl, formatPostDate } from "../../utils";
+import { postUrl, formatPostDate, client } from "../../lib";
 
 const { slug } = Astro.params;
 
@@ -15,13 +12,7 @@ export async function getStaticPaths() {
   return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
 }
 
-const database = await client.getDatabase();
-const post = slug ? await client.getPostBySlug(slug) : undefined;
-if (!post) throw new Error(`Post not found: ${slug}`);
-
-const content = post ? await client.getPostContent(post.id) : undefined;
-const html = content ? await markdownToHTML(content.markdown) : undefined;
-await downloadImages(content?.images, post?.images, database?.images);
+const { database, post, html } = await client.getPost(slug);
 ---
 
 <Layout

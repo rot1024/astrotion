@@ -7,16 +7,14 @@ import type {
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
 
-import { CACHE_DIR_NOTION } from "../constants";
-
 import type { MinimalNotionClient } from "./minimal";
-import { /* expiresInForObjects, */ getLastEditedTime } from "./utils";
+import { getLastEditedTime } from "./utils";
 
 export type Options = {
   base: MinimalNotionClient;
   databaseId: string;
   useFs?: boolean;
-  baseDir?: string;
+  baseDir: string;
   debug?: boolean;
 };
 
@@ -37,10 +35,13 @@ export class CacheClient {
     this.base = options.base;
     this.databaseId = options.databaseId;
     this.useFs = options?.useFs ?? false;
-    this.baseDir = options?.baseDir ?? CACHE_DIR_NOTION;
+    this.baseDir = options?.baseDir;
     this.debug = options?.debug ?? false;
     if (this.useFs) {
       fs.mkdirSync(this.baseDir, { recursive: true });
+    }
+    if (!this.baseDir) {
+      throw new Error("baseDir must be set");
     }
   }
 

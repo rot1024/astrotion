@@ -7,9 +7,10 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 
 import config from "../config";
-import type { Database, Post } from "../interfaces";
 
-import { fileUrlToAssetUrl, type Properties } from "./utils";
+import type { Database, Post } from "./interfaces";
+import { type Properties } from "./notion";
+import { fileUrlToAssetUrl } from "./utils";
 
 export function buildDatabase(res: GetDatabaseResponse): Database {
   if (!("title" in res)) throw new Error("invalid database");

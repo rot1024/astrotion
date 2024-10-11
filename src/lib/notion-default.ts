@@ -1,9 +1,14 @@
 import { Client as RawClient } from "@notionhq/client";
 
-import { DATABASE_ID, NOTION_API_SECRET, DEBUG } from "../constants";
+import {
+  DATABASE_ID,
+  NOTION_API_SECRET,
+  DEBUG,
+  CACHE_DIR_NOTION,
+} from "../constants";
 
-import { CacheClient } from "./cache";
-import { Client } from "./client";
+import { Client } from "./astrotion";
+import { CacheClient } from "./notion/cache";
 
 if (!NOTION_API_SECRET || !DATABASE_ID) {
   throw new Error("NOTION_API_SECRET and DATABASE_ID must be set");
@@ -18,6 +23,7 @@ const cacheClient = new CacheClient({
   databaseId: DATABASE_ID,
   useFs: true,
   debug: !!DEBUG,
+  baseDir: CACHE_DIR_NOTION,
 });
 
 const defaultClient = new Client(cacheClient, DATABASE_ID, !!DEBUG);

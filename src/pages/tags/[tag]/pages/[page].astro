@@ -2,10 +2,8 @@
 import Pagination from "../../../../components/Pagination.astro";
 import PostList from "../../../../components/PostList.astro";
 import config from "../../../../config";
-import { downloadImages } from "../../../../download";
 import Layout from "../../../../layouts/Layout.astro";
-import client from "../../../../notion";
-import { paginate } from "../../../../utils";
+import { client } from "../../../../lib";
 
 export async function getStaticPaths() {
   const posts = await client.getAllPosts();
@@ -25,16 +23,10 @@ export async function getStaticPaths() {
 }
 
 const { page, tag } = Astro.params;
-const [database, posts] = await Promise.all([
-  client.getDatabase(),
-  client.getAllPosts(),
-]);
-
-const filteredPosts = posts.filter((post) =>
-  post.tags.some((t) => t.name === tag),
+const { database, pageCount, pageInt, posts } = await client.listPosts(
+  page || "1",
+  (post) => post.tags.some((t) => t.name === tag),
 );
-const { pageCount, pageInt, pagePosts } = paginate(filteredPosts, page);
-await downloadImages(database?.images, ...filteredPosts.map((p) => p.images));
 ---
 
 <Layout rssUrl=`/tags/${tag}/rss.xml`>
@@ -48,7 +40,7 @@ await downloadImages(database?.images, ...filteredPosts.map((p) => p.images));
           {tag} - Page {pageInt} of {pageCount}
         </p>
       </header>
-      <PostList posts={pagePosts} />
+      <PostList posts={posts} />
       <Pagination page={pageInt} pageCount={pageCount} base={`/tags/${tag}`} />
     </article>
   </main>

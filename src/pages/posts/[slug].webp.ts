@@ -5,7 +5,7 @@ import { defaultFonts, generate } from "ezog";
 import sharp from "sharp";
 
 import config from "../../config";
-import client from "../../notion";
+import { client } from "../../lib";
 
 const fonts = defaultFonts(700);
 const ogBaseBuffer = await fs.promises

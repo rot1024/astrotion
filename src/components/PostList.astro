@@ -1,7 +1,7 @@
 ---
 import Card from "../components/Card.astro";
-import type { Post } from "../interfaces";
-import { formatPostDate, postUrl } from "../utils";
+import type { Post } from "../lib";
+import { formatPostDate, postUrl } from "../lib";
 
 export type Props = {
   posts: Post[];

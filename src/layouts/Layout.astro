@@ -7,8 +7,7 @@ import "katex/dist/katex.min.css";
 import Nav from "../components/Nav.astro";
 import config from "../config";
 import { PUBLIC_GA_TRACKING_ID } from "../constants";
-import client from "../notion";
-import { getUrl } from "../utils";
+import { client, getUrl } from "../lib";
 import "../styles/main.css";
 
 type Props = {

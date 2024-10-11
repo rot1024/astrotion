@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { APIResponseError } from "@notionhq/client";
 import type {
   BlockObjectResponse,
@@ -41,14 +39,14 @@ export async function getSingle<T>(cb: () => Promise<T>): Promise<T> {
   return res;
 }
 
-type Response<T> = {
+export type NotionResponse<T> = {
   next_cursor: string | null;
   has_more: boolean;
   results: T[];
 };
 
 export async function getAll<T>(
-  cb: (cursor: string | undefined) => Promise<Response<T>>,
+  cb: (cursor: string | undefined) => Promise<NotionResponse<T>>,
 ): Promise<T[]> {
   let results: T[] = [];
   let cursor: string | undefined = undefined;
@@ -189,29 +187,3 @@ export function expiresIn(
   const expiry_time = exp.sort()[0];
   return new Date(expiry_time);
 }
-
-export function fileUrlToAssetUrl(
-  imageUrl: string | undefined,
-  id: string,
-): string | undefined {
-  if (!imageUrl) return undefined; // should not download
-
-  const url = new URL(imageUrl);
-  if (!url.searchParams.has("X-Amz-Expires")) return undefined; // should not download
-
-  const filename = url.pathname.split("/").at(-1);
-  if (!filename) return imageUrl;
-
-  // replace ext to webp
-  const ext = path.extname(filename);
-  const filenameWithoutExt =
-    id || (ext ? filename.slice(0, -ext.length) : undefined);
-  const finalFilename = filenameWithoutExt
-    ? filenameWithoutExt + ".webp"
-    : filename;
-
-  const newUrl = path.join(assetsDir, finalFilename);
-  return newUrl;
-}
-
-export const assetsDir = "/static";
