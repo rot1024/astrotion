@@ -80,7 +80,9 @@ export function fileUrlToAssetUrl(
   if (!imageUrl) return undefined; // should not download
 
   const url = new URL(imageUrl);
-  if (!url.searchParams.has("X-Amz-Expires")) return undefined; // should not download
+  if (!url.searchParams.has("X-Amz-Expires") && !isUnsplash(url)) {
+    return undefined; // should not download
+  }
 
   const filename = url.pathname.split("/").at(-1);
   if (!filename) return imageUrl;
@@ -95,6 +97,10 @@ export function fileUrlToAssetUrl(
 
   const newUrl = path.join(assetsDir, finalFilename);
   return newUrl;
+}
+
+function isUnsplash(url: URL): boolean {
+  return url.hostname === "images.unsplash.com";
 }
 
 export const assetsDir = "/static";
