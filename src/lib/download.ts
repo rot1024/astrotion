@@ -38,16 +38,20 @@ export async function downloadImages(
 
       const body = await res.arrayBuffer();
 
-      // optimize images
-      const optimzied = await sharp(body).rotate().webp().toBuffer();
-      debug(
-        "image optimized",
-        localDest,
-        `${body.byteLength} bytes -> ${optimzied.length} bytes`,
-        `(${Math.floor((optimzied.length / body.byteLength) * 100)}%)`,
-      );
-
-      await fs.promises.writeFile(localDest, optimzied);
+      const ext = path.extname(localUrl);
+      if (ext === ".webp") {
+        // optimize images
+        const optimzied = await sharp(body).rotate().webp().toBuffer();
+        debug(
+          "image optimized",
+          localDest,
+          `${body.byteLength} bytes -> ${optimzied.length} bytes`,
+          `(${Math.floor((optimzied.length / body.byteLength) * 100)}%)`,
+        );
+        await fs.promises.writeFile(localDest, optimzied);
+      } else {
+        await fs.promises.writeFile(localDest, Buffer.from(body));
+      }
     });
 
   if (errors.length > 0) {

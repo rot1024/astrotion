@@ -87,13 +87,18 @@ export function fileUrlToAssetUrl(
   const filename = url.pathname.split("/").at(-1);
   if (!filename) return imageUrl;
 
-  // replace ext to webp
   const ext = path.extname(filename);
-  const filenameWithoutExt =
-    id || (ext ? filename.slice(0, -ext.length) : undefined);
-  const finalFilename = filenameWithoutExt
-    ? filenameWithoutExt + ".webp"
-    : filename;
+  let finalFilename = filename;
+
+  // it may be animated gif, but sharp does not support converting it to animated webp
+  if (ext !== ".gif") {
+    // replace ext to webp
+    const filenameWithoutExt =
+      id || (ext ? filename.slice(0, -ext.length) : undefined);
+    finalFilename = filenameWithoutExt
+      ? filenameWithoutExt + ".webp"
+      : filename;
+  }
 
   const newUrl = path.join(assetsDir, finalFilename);
   return newUrl;
