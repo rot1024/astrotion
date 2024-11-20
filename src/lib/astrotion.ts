@@ -154,7 +154,7 @@ export class Client implements ClientType {
     const mdblocks = await this.n2m.pageToMarkdown(postId);
 
     const images = new Map<string, string>();
-    const transformed = transform(mdblocks, posts);
+    const transformed = transform(mdblocks, posts, images);
 
     const markdown = this.n2m.toMarkdownString(transformed);
 

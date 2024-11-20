@@ -3,10 +3,14 @@ import type { MdBlock } from "notion-to-md/build/types";
 import type { Post } from "./interfaces";
 import { fileUrlToAssetUrl } from "./utils";
 
-export function transform(blocks: MdBlock[], posts: Post[]): MdBlock[] {
+export function transform(
+  blocks: MdBlock[],
+  posts: Post[],
+  images: Map<string, string>,
+): MdBlock[] {
   return transformMdBlocks(
     blocks,
-    (block) => transformMdImageBlock(block, new Map()),
+    (block) => transformMdImageBlock(block, images),
     (block) => transformMdLinkBlock(block, posts),
   );
 }
@@ -35,9 +39,11 @@ function transformMdImageBlock(
   if (block.type !== "image") return block;
 
   const imageMarkdown = block.parent;
+
   const imageUrl = imageMarkdown.match(/!\[.*?\]\((.+)\)/s)?.[1];
   if (imageUrl) {
     const newUrl = fileUrlToAssetUrl(imageUrl, block.blockId);
+
     if (newUrl && newUrl !== imageUrl) {
       imageUrls.set(imageUrl, newUrl);
       block.parent = block.parent.replace(imageUrl, newUrl);
