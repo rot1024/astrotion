@@ -1,17 +1,21 @@
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import { defineConfig } from "astro/config";
 import robotsTxt from "astro-robots-txt";
 
 import { BASE_PATH, CUSTOM_DOMAIN } from "./src/constants";
 import astrotion from "./src/integrations";
 
+import tailwindcss from "@tailwindcss/vite";
+
 // https://astro.build/config
 export default defineConfig({
   site: getSite(),
   base: BASE_PATH,
-  integrations: [astrotion(), tailwind(), sitemap(), robotsTxt()],
-  vite: { optimizeDeps: { exclude: ["@resvg/resvg-js"] } },
+  integrations: [astrotion(), sitemap(), robotsTxt()],
+  vite: {
+    optimizeDeps: { exclude: ["@resvg/resvg-js"] },
+    plugins: [tailwindcss()]
+  },
   trailingSlash: "always",
 });
 

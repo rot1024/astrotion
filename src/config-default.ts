@@ -1,4 +1,4 @@
-import type { Client } from "notiondown";
+import type { Client, Options } from "notiondown";
 
 export type Config = {
   title?: string;
@@ -54,7 +54,7 @@ export type Config = {
     title?: string;
     description?: string;
   };
-  notiondown?: ConstructorParameters<typeof Client>[0];
+  notiondown?: Partial<Options>;
 };
 
 const year = new Date().getFullYear();
@@ -80,6 +80,11 @@ const config: Config = {
     titleClasses: "text-9xl",
     titleFontFamily: "Londrina Solid, sans-serif",
   },
+  notiondown: {
+    properties: {
+      title: "Page",
+    }
+  }
 };
 
 export default config;

@@ -15,8 +15,8 @@ const client = new Client({
   auth,
   databaseId,
   cacheDir: CACHE_DIR_NOTION,
-  debug,
   imageDir: "/" + ASSET_DIR,
+  debug,
   internalLink: (post) => postUrl(post.slug),
 });
 
@@ -108,7 +108,7 @@ export async function donwloadImages(images: Map<string, string> | Record<string
     return;
   }
 
-  await downloadImagesWithRetry(postId, imageMap, client, {
+  await downloadImagesWithRetry(imageMap, postId, client, {
     debug,
     dir: CACHE_DIR_ASSETS,
   });
@@ -118,7 +118,7 @@ export async function donwloadPostImages(posts: Post[]) {
   for (const post of posts) {
     if (!post.images || Object.keys(post.images).length === 0) return;
 
-    await downloadImagesWithRetry(post.id, new Map(Object.entries(post.images)), client, {
+    await downloadImagesWithRetry(new Map(Object.entries(post.images)), post.id, client, {
       debug,
       dir: CACHE_DIR_ASSETS,
     });

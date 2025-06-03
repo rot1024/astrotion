@@ -9,6 +9,7 @@ Astro + Notion + Blog
 - Easy to customize
 - Simpler implemetation: Notion's rendering is achieved simply by markdown-izing pages
 - Notion cache ready: it works on Cloudflare Pages
+- Support Astro v5 and TailwindCSS v4
 
 💡 Powered by [notiondown](https://github.com/rot1024/notiondown)
 
