@@ -1,7 +1,8 @@
 ---
+import type { Post } from "notiondown";
+
 import Card from "../components/Card.astro";
-import type { Post } from "../lib";
-import { formatPostDate, postUrl } from "../lib";
+import { formatPostDate, postUrl } from "../utils";
 
 export type Props = {
   posts: Post[];

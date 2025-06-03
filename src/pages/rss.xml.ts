@@ -1,17 +1,16 @@
 import rss from "@astrojs/rss";
 
-import { client, postUrl } from "../lib";
+import { site } from "../config";
+import { getDatabaseAndAllPosts } from "../notion";
+import { postUrl } from "../utils";
 
-export async function GET() {
-  const [posts, db] = await Promise.all([
-    client.getAllPosts(),
-    client.getDatabase(),
-  ]);
+export async function GET(context: { site?: string }) {
+  const { database, posts } = await getDatabaseAndAllPosts();
 
   return rss({
-    title: db.title,
-    description: db.description,
-    site: import.meta.env.SITE,
+    title: database.title,
+    description: database.description,
+    site: context.site || site,
     items: posts.map((post) => ({
       link: postUrl(post.slug),
       title: post.title,

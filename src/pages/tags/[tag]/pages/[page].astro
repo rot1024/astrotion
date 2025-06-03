@@ -3,10 +3,10 @@ import Pagination from "../../../../components/Pagination.astro";
 import PostList from "../../../../components/PostList.astro";
 import config from "../../../../config";
 import Layout from "../../../../layouts/Layout.astro";
-import { client } from "../../../../lib";
+import { getAllPosts, listPosts } from "../../../../notion";
 
 export async function getStaticPaths() {
-  const posts = await client.getAllPosts();
+  const posts = await getAllPosts();
   const tags = new Map<string, number>();
   posts.forEach((post) =>
     post.tags.forEach((tag) => {
@@ -23,8 +23,8 @@ export async function getStaticPaths() {
 }
 
 const { page, tag } = Astro.params;
-const { database, pageCount, pageInt, posts } = await client.listPosts(
-  page || "1",
+const { database, totalPages, currentPage, posts } = await listPosts(
+  parseInt(page, 10) || 1,
   (post) => post.tags.some((t) => t.name === tag),
 );
 ---
@@ -37,11 +37,11 @@ const { database, pageCount, pageInt, posts } = await client.listPosts(
           {database.title}
         </h1>
         <p class="mx-auto max-w-xl">
-          {tag} - Page {pageInt} of {pageCount}
+          {tag} - Page {currentPage} of {totalPages}
         </p>
       </header>
       <PostList posts={posts} />
-      <Pagination page={pageInt} pageCount={pageCount} base={`/tags/${tag}`} />
+      <Pagination page={currentPage} pageCount={totalPages} base={`/tags/${tag}`} />
     </article>
   </main>
 </Layout>

@@ -1,9 +1,11 @@
 import rss from "@astrojs/rss";
 
-import { postUrl, client } from "../../../lib";
+import { site } from "../../../config";
+import { getDatabaseAndAllPosts, getAllPosts } from "../../../notion";
+import { postUrl } from "../../../utils";
 
 export async function getStaticPaths() {
-  const posts = await client.getAllPosts();
+  const posts = await getAllPosts();
   const tags = new Set<string>();
   posts.forEach((post) =>
     post.tags.forEach((tag) => {
@@ -16,16 +18,13 @@ export async function getStaticPaths() {
   }));
 }
 
-export async function GET({ params }: { params: { tag: string } }) {
-  const [posts, db] = await Promise.all([
-    client.getAllPosts(),
-    client.getDatabase(),
-  ]);
+export async function GET({ params, site: ctxsite }: { params: { tag: string }, site: string }) {
+  const { database, posts } = await getDatabaseAndAllPosts();
 
   return rss({
-    title: db.title,
-    description: db.description,
-    site: import.meta.env.SITE,
+    title: database.title,
+    description: database.description,
+    site: ctxsite || site,
     items: posts
       .filter((post) => post.tags.some((t) => t.name === params.tag))
       .map((post) => ({

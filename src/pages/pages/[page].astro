@@ -3,20 +3,19 @@ import Pagination from "../../components/Pagination.astro";
 import PostList from "../../components/PostList.astro";
 import config from "../../config";
 import Layout from "../../layouts/Layout.astro";
-import { client, paginate } from "../../lib";
+import { listPosts } from "../../notion";
 
 export async function getStaticPaths() {
-  const posts = await client.getAllPosts();
-  const { pageCount } = paginate(posts, "1");
+  const { pageSize } = await listPosts(1);
 
-  return Array.from({ length: pageCount }, (_, i) => ({
+  return Array.from({ length: pageSize }, (_, i) => ({
     params: { page: (i + 1).toString() },
   }));
 }
 
 const { page } = Astro.params;
-const { database, pageCount, pageInt, posts } = await client.listPosts(
-  page || "1",
+const { database, totalPages, currentPage, posts } = await listPosts(
+  parseInt(page, 10) || 1,
 );
 ---
 
@@ -28,11 +27,11 @@ const { database, pageCount, pageInt, posts } = await client.listPosts(
           {database.title}
         </h1>
         <p class="mx-auto max-w-xl">
-          Page {pageInt} of {pageCount}
+          Page {currentPage} of {totalPages}
         </p>
       </header>
       <PostList posts={posts} />
-      <Pagination page={pageInt} pageCount={pageCount} />
+      <Pagination page={currentPage} pageCount={totalPages} />
     </article>
   </main>
 </Layout>

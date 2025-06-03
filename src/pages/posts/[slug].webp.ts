@@ -5,7 +5,7 @@ import { defaultFonts, generate } from "ezog";
 import sharp from "sharp";
 
 import config from "../../config";
-import { client } from "../../lib";
+import { getAllPosts, getPostOnly } from "../../notion";
 
 const fonts = defaultFonts(700);
 const ogBaseBuffer = await fs.promises
@@ -17,7 +17,7 @@ export type Props = {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await client.getAllPosts();
+  const posts = await getAllPosts();
   return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
 };
 
@@ -28,7 +28,7 @@ const fontSize = 60;
 const lineHeight = 80;
 
 export const GET: APIRoute<Props> = async ({ params }) => {
-  const post = await client.getPostBySlug(params.slug || "");
+  const post = await getPostOnly(params.slug || "");
   if (!post) throw new Error("Post not found");
 
   const image = await generate(

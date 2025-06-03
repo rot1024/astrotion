@@ -3,16 +3,17 @@ import Tags from "../../components/Tags.astro";
 import config from "../../config";
 import PostFooter from "../../customization/PostFooter.astro";
 import Layout from "../../layouts/Layout.astro";
-import { postUrl, formatPostDate, client } from "../../lib";
+import { getAllPosts, getPost } from "../../notion";
+import { postUrl, formatPostDate } from "../../utils";
 
 const { slug } = Astro.params;
 
 export async function getStaticPaths() {
-  const posts = await client.getAllPosts();
+  const posts = await getAllPosts();
   return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
 }
 
-const { database, post, html } = await client.getPost(slug);
+const { database, post, html } = await getPost(slug);
 ---
 
 <Layout

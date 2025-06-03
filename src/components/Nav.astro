@@ -1,8 +1,14 @@
 ---
-import config from "../config";
-import { client, getUrl } from "../lib";
+import { type Database } from "notiondown";
 
-const database = await client.getDatabase();
+import config from "../config";
+import { getUrl } from "../utils";
+
+export type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
 ---
 
 <nav class:list={[config.nav?.classes]}>
@@ -12,7 +18,7 @@ const database = await client.getDatabase();
     <a
       href={getUrl("/")}
       class:list={["text-xl title", config.nav?.titleClasses]}
-      >{database.title}</a
+      >{title}</a
     >
   </div>
 </nav>

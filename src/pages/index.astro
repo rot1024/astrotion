@@ -3,9 +3,9 @@ import Pagination from "../components/Pagination.astro";
 import PostList from "../components/PostList.astro";
 import config from "../config";
 import Layout from "../layouts/Layout.astro";
-import { client } from "../lib";
+import { listPosts } from "../notion";
 
-const { database, pageCount, pageInt, posts } = await client.listPosts("1");
+const { database, totalPages, currentPage, posts } = await listPosts(1);
 ---
 
 <Layout>
@@ -20,7 +20,7 @@ const { database, pageCount, pageInt, posts } = await client.listPosts("1");
         </p>
       </header>
       <PostList posts={posts} />
-      <Pagination page={pageInt} pageCount={pageCount} />
+      <Pagination page={currentPage} pageCount={totalPages} />
     </article>
   </main>
 </Layout>

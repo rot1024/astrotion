@@ -1,4 +1,61 @@
-import type { Config } from "./lib/interfaces";
+import type { Client } from "notiondown";
+
+export type Config = {
+  title?: string;
+  description?: string;
+  dateFormat?: string;
+  postsPerPage?: number;
+  head?: {
+    titleSeparator?: string;
+  };
+  og?: {
+    siteImagePath?: string;
+    baseImagePath?: string;
+    backgroundColor?: string;
+    titleStyle?: {
+      x?: number;
+      y?: number;
+      width?: number;
+      fontFamily?: string[];
+      fontSize?: number;
+      lineHeight?: number;
+      lineClamp?: number;
+      align?: "left" | "right" | "center";
+      color?: string;
+    };
+  };
+  googleFonts?: string;
+  body?: {
+    classes?: string;
+    fontFamily?: string;
+  };
+  nav?: {
+    classes?: string;
+    titleClasses?: string;
+    titleFontFamily?: string;
+  };
+  index?: {
+    titleClasses?: string;
+    titleFontFamily?: string;
+  };
+  post?: {
+    classes?: string;
+    fontFamily?: string;
+    titleClasses?: string;
+    titleFontFamily?: string;
+  };
+  footer?: {
+    content?: string;
+    classes?: string;
+  };
+  notFound?: {
+    titleClasses?: string;
+    titleFontFamily?: string;
+    title?: string;
+    description?: string;
+  };
+  notiondown?: ConstructorParameters<typeof Client>[0];
+};
 
 const year = new Date().getFullYear();
 

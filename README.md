@@ -2,8 +2,6 @@
 
 Astro + Notion + Blog
 
-NOTE: This is not yet production-ready
-
 ## What is different from [astro-notion-blog](https://github.com/otoyo/astro-notion-blog)?
 
 - Stylish theme inspired by [Creek](https://github.com/robertguss/Astro-Theme-Creek)
@@ -11,6 +9,8 @@ NOTE: This is not yet production-ready
 - Easy to customize
 - Simpler implemetation: Notion's rendering is achieved simply by markdown-izing pages
 - Notion cache ready: it works on Cloudflare Pages
+
+💡 Powered by [notiondown](https://github.com/rot1024/notiondown)
 
 ## Features
 
@@ -20,7 +20,6 @@ NOTE: This is not yet production-ready
 - Basic blocks support
 - Code syntax highlighting
 - Math equation rendering
-- Mermaid rendering
 - Automatic OG image generation
 
 ## Customization
@@ -30,14 +29,18 @@ These files can be customized without concern for conflicts:
 - `public/*`
 - `src/customization/*`
 
+## Showcase
+
+- [Re:Earth Engineering](https://reearth.engineering)
+
 ## How to use
 
 astrotion was inspired by [astro-notion-blog](https://github.com/otoyo/astro-notion-blog). Therefore, the usage is almost the same as astro-notion-blog. Please follow the instructions [here](https://github.com/otoyo/astro-notion-blog).
 
 ## TODO
 
+- [ ] Mermaid rendering
 - [ ] Fix links to pages in paragraph blocks
-- [ ] Support toggle blocks
 - [ ] Support embed and bookmark blocks
 - [ ] Search
 - [ ] Related Posts

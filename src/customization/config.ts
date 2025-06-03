@@ -1,5 +1,4 @@
-import defaultConfig from "../config-default";
-import type { Config } from "../lib/interfaces";
+import defaultConfig, { type Config } from "../config-default";
 
 const config: Config = {
   ...defaultConfig,
