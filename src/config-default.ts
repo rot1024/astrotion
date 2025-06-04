@@ -81,6 +81,17 @@ const config: Config = {
     titleFontFamily: "Londrina Solid, sans-serif",
   },
   notiondown: {
+    filter: {
+      published: {
+        enabled: true,
+        value: true
+      },
+      date: {
+        enabled: true,
+        operator: "on_or_before",
+        value: "now"
+      }
+    },
     properties: {
       title: "Page",
     }
