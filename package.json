@@ -33,7 +33,7 @@
     "ezog": "^0.4.0",
     "katex": "^0.16.22",
     "mermaid": "^11.6.0",
-    "notiondown": "^0.1.5",
+    "notiondown": "^0.1.8",
     "prismjs": "^1.30.0",
     "sharp": "^0.34.2",
     "tailwindcss": "^4.1.8"
