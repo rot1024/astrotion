@@ -17,8 +17,7 @@
     "lint": "eslint . --fix",
     "format": "prettier . --write",
     "check": "prettier . --check",
-    "typecheck": "tsc",
-    "postinstall": "symlink-dir node_modules/.astro/.astrotion/static public/static"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.13",
