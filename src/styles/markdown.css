@@ -9,7 +9,7 @@
 }
 
 .markdown {
-  @apply text-lg text-gray-900 leading-relaxed break-words;
+  @apply text-lg text-gray-900 leading-relaxed wrap-break-word;
 }
 
 .markdown>* {
@@ -77,7 +77,7 @@
 }
 
 .markdown pre.shiki {
-  background-color: #f0f0f0 !important;
+  @apply bg-gray-50!;
 }
 
 .markdown pre code {
@@ -110,7 +110,7 @@
 
 /* Override pygments style background color. */
 .markdown .highlight pre {
-  @apply !bg-gray-100;
+  @apply bg-gray-100!;
 }
 
 /* astrotion */
