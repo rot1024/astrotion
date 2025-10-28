@@ -17,9 +17,21 @@ export default (): AstroIntegration => ({
         const publicAssetDir = path.join("public", ASSET_DIR);
 
         // Remove existing symlink or directory
-        if (fs.existsSync(publicAssetDir)) {
-          fs.rmSync(publicAssetDir, { recursive: true });
-          console.log(`astrotion: removed existing ${publicAssetDir}`);
+        try {
+          const stats = fs.lstatSync(publicAssetDir);
+          // If it's a symlink, use unlinkSync; otherwise use rmSync
+          if (stats.isSymbolicLink()) {
+            fs.unlinkSync(publicAssetDir);
+            console.log(`astrotion: removed existing symlink ${publicAssetDir}`);
+          } else {
+            fs.rmSync(publicAssetDir, { recursive: true, force: true });
+            console.log(`astrotion: removed existing directory ${publicAssetDir}`);
+          }
+        } catch (error: any) {
+          // ENOENT means the file doesn't exist, which is fine
+          if (error.code !== "ENOENT") {
+            console.error(`astrotion: error checking ${publicAssetDir}:`, error);
+          }
         }
 
         // Create symlink

@@ -1,4 +1,4 @@
-import type { Client, Options } from "notiondown";
+import type { Options } from "notiondown";
 
 export type Config = {
   title?: string;
@@ -81,6 +81,7 @@ const config: Config = {
     titleFontFamily: "Londrina Solid, sans-serif",
   },
   notiondown: {
+    renderHtml: true,
     filter: {
       published: {
         enabled: true,
@@ -91,6 +92,9 @@ const config: Config = {
         operator: "on_or_before",
         value: "now"
       }
+    },
+    md2html: {
+      shikiTheme: "github-light",
     }
   }
 };

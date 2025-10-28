@@ -33,15 +33,13 @@
     "ezog": "^0.4.0",
     "katex": "^0.16.25",
     "mermaid": "^11.12.1",
-    "notiondown": "^0.2.2",
-    "prismjs": "^1.30.0",
+    "notiondown": "^0.2.4",
     "sharp": "^0.34.4",
     "tailwindcss": "^4.1.16"
   },
   "devDependencies": {
     "@types/katex": "^0.16.7",
     "@types/node": "^24.9.1",
-    "@types/prismjs": "^1.26.5",
     "eslint": "^9.38.0",
     "eslint-config-reearth": "^0.3.8",
     "eslint-plugin-astro": "^1.4.0",
