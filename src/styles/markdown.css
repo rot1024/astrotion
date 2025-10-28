@@ -73,7 +73,11 @@
 }
 
 .markdown pre {
-  @apply bg-gray-100 rounded p-4;
+  @apply bg-gray-50 rounded p-4;
+}
+
+.markdown pre.shiki {
+  background-color: #f0f0f0 !important;
 }
 
 .markdown pre code {
