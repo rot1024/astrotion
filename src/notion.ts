@@ -1,21 +1,21 @@
 import { Client, downloadImages, downloadImagesWithRetry, type Post } from "notiondown";
 
-import config, { auth, databaseId, debug } from "./config";
+import config, { auth, dataSourceId, debug } from "./config";
 import { ASSET_DIR, CACHE_DIR_ASSETS, CACHE_DIR_NOTION } from "./constants";
 import { postUrl } from "./utils";
 
 const pageSize = config.postsPerPage ?? 20;
 
-if (!auth || !databaseId) {
-  throw new Error("NOTION_API_SECRET and DATABASE_ID environment variables must be set.");
+if (!auth || !dataSourceId) {
+  throw new Error("NOTION_API_SECRET and DATA_SOURCE_ID environment variables must be set.");
 }
 
 const client = new Client({
   ...config.notiondown,
   auth,
-  databaseId,
+  dataSourceId,
   cacheDir: CACHE_DIR_NOTION,
-  imageDir: "/" + ASSET_DIR,
+  assetsDir: "/" + ASSET_DIR,
   debug,
   internalLink: (post) => postUrl(post.slug),
 });
@@ -69,17 +69,17 @@ export async function getPostOnly(slug: string) {
 }
 
 export async function getPost(slug: string) {
-  const { database, posts, images } = await client.getDatabaseAndAllPosts();
+  const { database, posts, assets } = await client.getDatabaseAndAllPosts();
   const post = posts.find((p) => p.slug === slug);
   if (!post) {
     throw new Error(`Post with slug "${slug}" not found.`);
   }
 
   const content = await client.getPostContent(post.id);
-  for (const [key, value] of content.images?.entries() || []) {
-    images.set(key, value);
+  for (const [key, value] of content.assets?.entries() || []) {
+    assets.set(key, value);
   }
-  await donwloadImages(images, post.id);
+  await donwloadImages(assets, post.id);
 
   return {
     post,

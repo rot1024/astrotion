@@ -91,9 +91,6 @@ const config: Config = {
         operator: "on_or_before",
         value: "now"
       }
-    },
-    properties: {
-      title: "Page",
     }
   }
 };

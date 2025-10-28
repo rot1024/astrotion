@@ -21,34 +21,34 @@
     "postinstall": "symlink-dir node_modules/.astro/.astrotion/static public/static"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.11",
-    "@astrojs/sitemap": "^3.4.0",
+    "@astrojs/rss": "^4.0.13",
+    "@astrojs/sitemap": "^3.6.0",
     "@resvg/resvg-js": "^2.6.2",
-    "@tailwindcss/vite": "^4.1.8",
-    "astro": "^5.8.1",
+    "@tailwindcss/vite": "^4.1.16",
+    "astro": "^5.15.1",
     "astro-analytics": "^2.7.0",
     "astro-google-fonts-optimizer": "^0.2.2",
     "astro-robots-txt": "^1.0.0",
     "date-fns": "^4.1.0",
     "ezog": "^0.4.0",
-    "katex": "^0.16.22",
-    "mermaid": "^11.6.0",
-    "notiondown": "^0.1.8",
+    "katex": "^0.16.25",
+    "mermaid": "^11.12.1",
+    "notiondown": "^0.2.2",
     "prismjs": "^1.30.0",
-    "sharp": "^0.34.2",
-    "tailwindcss": "^4.1.8"
+    "sharp": "^0.34.4",
+    "tailwindcss": "^4.1.16"
   },
   "devDependencies": {
     "@types/katex": "^0.16.7",
-    "@types/node": "^22.15.29",
+    "@types/node": "^24.9.1",
     "@types/prismjs": "^1.26.5",
-    "eslint": "^9.28.0",
+    "eslint": "^9.38.0",
     "eslint-config-reearth": "^0.3.8",
-    "eslint-plugin-astro": "^1.3.1",
-    "prettier": "^3.5.3",
+    "eslint-plugin-astro": "^1.4.0",
+    "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
-    "symlink-dir": "^6.0.5",
-    "typescript": "^5.8.3",
-    "vitest": "^3.2.0"
+    "symlink-dir": "^9.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.4"
   }
 }

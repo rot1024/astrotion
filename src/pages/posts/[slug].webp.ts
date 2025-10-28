@@ -68,5 +68,5 @@ export const GET: APIRoute<Props> = async ({ params }) => {
   );
 
   const webp = await sharp(image).webp().toBuffer();
-  return new Response(webp.buffer);
+  return new Response(new Uint8Array(webp));
 };
