@@ -81,7 +81,7 @@
 }
 
 .markdown pre code {
-  @apply block bg-transparent p-0 overflow-visible rounded-none;
+  @apply block bg-transparent p-0 overflow-visible rounded-none whitespace-pre-wrap break-words;
 }
 
 .markdown ul {
