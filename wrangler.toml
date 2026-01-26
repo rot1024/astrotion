@@ -1,0 +1,16 @@
+# Change this to your project name
+name = "astrotion"
+compatibility_date = "2025-10-19"
+workers_dev = true
+
+[build]
+command = "npm run build"
+
+[assets]
+directory = "./dist"
+
+[observability]
+enabled = true
+
+[preview]
+enabled = true

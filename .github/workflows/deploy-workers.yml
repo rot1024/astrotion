@@ -1,0 +1,25 @@
+name: Deploy (Cloudflare Workers)
+
+on:
+  #schedule:
+  #  - cron: '5 23 * * 0' # 08:05(Mon) JST
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install
+      - name: Deploy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
+          DATA_SOURCE_ID: ${{ secrets.DATA_SOURCE_ID }}

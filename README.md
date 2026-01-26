@@ -55,7 +55,17 @@ Click the "Use this template" button on GitHub to create your own repository.
 2. Copy the "Internal Integration Token" as `NOTION_API_SECRET`
 3. Go back to your Notion database page, click "..." → "Connections" → "Connect to" and select your integration
 
-### 4. Deploy to Cloudflare Pages
+### 4. Deploy to Cloudflare Workers
+
+1. Update `name` in `wrangler.toml` to your project name
+2. Create a `.env` file with the following variables:
+   ```
+   NOTION_API_SECRET=your_notion_integration_token
+   DATA_SOURCE_ID=your_notion_database_id
+   ```
+3. Install dependencies and deploy: `npm install && npx wrangler deploy`
+
+### 5. Deploy to Cloudflare Pages (Alternative)
 
 1. Go to [Cloudflare Pages](https://pages.cloudflare.com/) and create a new project
 2. Connect your GitHub repository
@@ -64,9 +74,23 @@ Click the "Use this template" button on GitHub to create your own repository.
    - `DATA_SOURCE_ID`: Your Notion database ID
 4. Click "Save and Deploy"
 
-### 5. Publish new posts
+### 6. Set up automatic deployments (Optional)
 
-After publishing a new post in Notion, you need to trigger a new deployment. You can do this manually from the Cloudflare Pages dashboard, or set up automatic deployments using GitHub Actions or webhooks.
+After publishing a new post in Notion, you need to trigger a new deployment. You can use the included GitHub Actions workflows:
+
+**For Cloudflare Workers:**
+
+Set the following secrets in your GitHub repository settings:
+- `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
+- `NOTION_API_SECRET`: Your Notion integration token
+- `DATA_SOURCE_ID`: Your Notion database ID
+
+Then run the "Deploy (Cloudflare Workers)" workflow manually or set up a schedule.
+
+**For Cloudflare Pages:**
+
+Set up a deploy hook in Cloudflare Pages dashboard, then add the URL as `DEPLOY_HOOK_URL` secret in your GitHub repository. Run the "Deploy (Webhook)" workflow manually or set up a schedule.
 
 ## TODO
 

@@ -47,5 +47,8 @@
     "symlink-dir": "^9.0.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.7"
+  },
+  "optionalDependencies": {
+    "wrangler": "^4.60.0"
   }
 }

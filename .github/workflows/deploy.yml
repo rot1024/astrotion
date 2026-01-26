@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy (Webhook)
 
 on:
   #schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  curl:
+  deploy:
     name: Kick deploy hook
     runs-on: ubuntu-latest
     steps:
