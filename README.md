@@ -23,6 +23,7 @@ Astro + Notion + Blog
 - Basic blocks support
 - Code syntax highlighting
 - Math equation rendering
+- Mermaid diagram rendering
 - Automatic OG image generation
 
 ## Customization
@@ -69,8 +70,7 @@ After publishing a new post in Notion, you need to trigger a new deployment. You
 
 ## TODO
 
-- [ ] Mermaid rendering
-- [ ] Fix links to pages in paragraph blocks
 - [ ] Support embed and bookmark blocks
 - [ ] Search
 - [ ] Related Posts
+- [ ] i18n support
