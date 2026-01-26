@@ -97,7 +97,7 @@
 }
 
 .markdown table {
-  @apply text-base border-gray-600;
+  @apply text-base border-gray-600 block overflow-x-auto max-w-full;
 }
 
 .markdown th {
