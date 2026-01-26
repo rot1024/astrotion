@@ -2,6 +2,8 @@
 
 Astro + Notion + Blog
 
+![Screenshot](docs/screenshot.webp)
+
 ## What is different from [astro-notion-blog](https://github.com/otoyo/astro-notion-blog)?
 
 - Stylish theme inspired by [Creek](https://github.com/robertguss/Astro-Theme-Creek)

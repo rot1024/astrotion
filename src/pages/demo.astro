@@ -1,0 +1,104 @@
+---
+import Card from "../components/Card.astro";
+import config from "../config";
+import Layout from "../layouts/Layout.astro";
+
+if (!import.meta.env.DEV) {
+  return Astro.redirect("/404");
+}
+
+const database = {
+  title: "Astrotion",
+  description: "A collection of thoughts, ideas, and discoveries about technology, design, and life.",
+};
+
+const posts = [
+  {
+    title: "Getting Started with Astro",
+    excerpt: "Learn how to build blazingly fast websites with Astro, the modern static site generator that ships zero JavaScript by default.",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=450&fit=crop",
+    date: "2025-01-15",
+    slug: "getting-started-with-astro",
+  },
+  {
+    title: "The Art of Minimalist Design",
+    excerpt: "Exploring the principles of minimalist design and how less can truly be more when creating memorable user experiences.",
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=450&fit=crop",
+    date: "2025-01-12",
+    slug: "minimalist-design",
+  },
+  {
+    title: "Building a Second Brain",
+    excerpt: "A practical guide to organizing your digital life and creating a personal knowledge management system that actually works.",
+    image: "https://images.unsplash.com/photo-1456324504439-367cee3b3c32?w=800&h=450&fit=crop",
+    date: "2025-01-10",
+    slug: "second-brain",
+  },
+  {
+    title: "Remote Work Best Practices",
+    excerpt: "Tips and strategies for staying productive and maintaining work-life balance while working from anywhere in the world.",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=450&fit=crop",
+    date: "2025-01-08",
+    slug: "remote-work",
+  },
+  {
+    title: "Introduction to TypeScript",
+    excerpt: "Why TypeScript is becoming the go-to choice for JavaScript developers and how to get started with type-safe coding.",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=450&fit=crop",
+    date: "2025-01-05",
+    slug: "intro-typescript",
+  },
+  {
+    title: "Mastering CSS Grid Layout",
+    excerpt: "A comprehensive guide to CSS Grid, the powerful layout system that makes complex web layouts simple and intuitive.",
+    image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?w=800&h=450&fit=crop",
+    date: "2025-01-03",
+    slug: "css-grid",
+  },
+];
+
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+---
+
+<Layout database={database}>
+  <main class="py-12 lg:py-20">
+    <article class="max-w-6xl mx-auto px-3">
+      <header class="text-center mb-12">
+        <h1 class:list={["mb-12 text-6xl title", config.index?.titleClasses]}>
+          {database.title}
+        </h1>
+        <p class="mx-auto max-w-xl">
+          {database.description}
+        </p>
+      </header>
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
+        {
+          posts.map((post) => (
+            <Card
+              href={`/posts/${post.slug}`}
+              title={post.title}
+              body={post.excerpt}
+              image={post.image}
+              date={formatDate(post.date)}
+            />
+          ))
+        }
+      </section>
+    </article>
+  </main>
+</Layout>
+<style
+  define:vars={{
+    titleFontFamily: config.index?.titleFontFamily || "inherit",
+  }}
+>
+  .title {
+    font-family: var(--titleFontFamily);
+  }
+</style>
