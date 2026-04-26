@@ -1,47 +1,69 @@
 ---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
 import Tags from "../../components/Tags.astro";
 import config from "../../config";
 import PostFooter from "../../customization/PostFooter.astro";
 import Layout from "../../layouts/Layout.astro";
-import { getAllPosts, getPost } from "../../notion";
-import { postUrl, formatPostDate } from "../../utils";
+import { getDatabase } from "@astrotion/astro/content";
+import { optimizeBodyImages, postUrl, formatPostDate } from "../../utils";
 import "../../styles/markdown.css";
 
-const { slug } = Astro.params;
-
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
-  return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
 }
 
-const { database, post, html } = await getPost(slug);
+const { post } = Astro.props;
+const database = await getDatabase();
+const coverImage = post.data.cover ?? post.data.featuredImage;
+const renderedHtml =
+  (post as { rendered?: { html: string } }).rendered?.html ?? "";
+const optimizedHtml = await optimizeBodyImages(renderedHtml);
 ---
 
 <Layout
-  title={post.title}
-  description={post.excerpt}
-  ogImage={postUrl(post.slug + ".webp", Astro.site)}
+  title={post.data.title}
+  description={post.data.excerpt}
+  ogImage={postUrl(post.data.slug + ".webp", Astro.site)}
 >
   <main class="py-12 lg:py-20">
     <article class="max-w-5xl mx-auto px-3">
       <header class="mx-auto pb-12 lg:pb-20 max-w-3xl text-center">
         <h1 class:list={["text-5xl mb-6 title", config.post?.titleClasses]}>
-          {post.title}
+          {post.data.title}
         </h1>
         <p class="text-center">
-          {formatPostDate(post.date)}
+          {formatPostDate(post.data.date)}
         </p>
       </header>
       {
-        (post.cover || post.featuredImage) && (
-          <img
-            class="rounded-xl mx-auto aspect-video object-cover"
-            style="min-width: 80%;"
-            loading="lazy"
-            src={post.cover || post.featuredImage}
-            alt={post.title}
-          />
-        )
+        coverImage &&
+          (typeof coverImage === "string" ? (
+            // Remote URL (e.g. Notion stock cover); skip Astro optimization
+            // and render as a plain <img> with intrinsic dimensions unknown.
+            <img
+              class="rounded-xl mx-auto aspect-video object-cover"
+              style="min-width: 80%;"
+              loading="lazy"
+              src={coverImage}
+              alt={post.data.title}
+            />
+          ) : (
+            <Image
+              class="rounded-xl mx-auto aspect-video object-cover"
+              style="min-width: 80%;"
+              loading="lazy"
+              src={coverImage}
+              alt={post.data.title}
+              widths={[400, 800, 1200]}
+              sizes="(min-width: 1024px) 1024px, 100vw"
+            />
+          ))
       }
       <section
         class:list={[
@@ -49,9 +71,9 @@ const { database, post, html } = await getPost(slug);
           config.post?.classes,
         ]}
       >
-        <div class="markdown" set:html={html} />
-        <Tags tags={post.tags} />
-        <PostFooter post={post} database={database} />
+        <div class="markdown" set:html={optimizedHtml} />
+        <Tags tags={post.data.tags} />
+        <PostFooter post={post.data} database={database} />
       </section>
     </article>
   </main>

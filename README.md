@@ -13,7 +13,9 @@ Astro + Notion + Blog
 - Notion cache ready: it works on Cloudflare Pages
 - Support Astro v5 and TailwindCSS v4
 
-💡 Powered by [notiondown](https://github.com/rot1024/notiondown)
+💡 Powered by [notiondown](https://github.com/rot1024/notiondown) and
+[`@astrotion/loader`](./packages/astro-loader) (Astro Content Layer loader,
+also publishable as a standalone npm package).
 
 ## Features
 
@@ -25,6 +27,18 @@ Astro + Notion + Blog
 - Math equation rendering
 - Mermaid diagram rendering
 - Automatic OG image generation
+
+## Repository Structure
+
+This repository is an npm workspaces monorepo:
+
+- `./` — the Astro template (root app)
+- `packages/astro-loader/` — `@astrotion/loader`, the standalone Astro
+  Content Layer loader for Notion. The template consumes it via the
+  workspace; you can also use it independently in your own Astro project.
+
+See [packages/astro-loader/README.md](./packages/astro-loader/README.md) for
+loader-only usage.
 
 ## Customization
 

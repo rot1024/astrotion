@@ -1,11 +1,15 @@
 ---
+import { getCollection } from "astro:content";
+
 import Pagination from "../components/Pagination.astro";
 import PostList from "../components/PostList.astro";
 import config from "../config";
 import Layout from "../layouts/Layout.astro";
-import { listPosts } from "../notion";
+import { getDatabase, paginate, sortPostsByDate } from "@astrotion/astro/content";
 
-const { database, totalPages, currentPage, posts } = await listPosts(1);
+const allPosts = sortPostsByDate(await getCollection("posts"));
+const database = await getDatabase();
+const { posts, totalPages, currentPage } = paginate(allPosts, 1);
 ---
 
 <Layout>
@@ -19,7 +23,7 @@ const { database, totalPages, currentPage, posts } = await listPosts(1);
           {database.description}
         </p>
       </header>
-      <PostList posts={posts} />
+      <PostList posts={posts.map((p) => p.data)} />
       <Pagination page={currentPage} pageCount={totalPages} />
     </article>
   </main>

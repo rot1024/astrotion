@@ -7,6 +7,9 @@
   "engines": {
     "node": ">=22"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -22,6 +25,8 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",
+    "@astrotion/astro": "*",
+    "@astrotion/loader": "*",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.16",
     "astro": "^5.15.3",

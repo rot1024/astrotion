@@ -1,21 +1,28 @@
 ---
+import { getCollection } from "astro:content";
+
 import Pagination from "../../../../components/Pagination.astro";
 import PostList from "../../../../components/PostList.astro";
 import config from "../../../../config";
 import Layout from "../../../../layouts/Layout.astro";
-import { getAllPosts, listPosts } from "../../../../notion";
+import {
+  getDatabase,
+  paginate,
+  sortPostsByDate,
+} from "@astrotion/astro/content";
 
 export async function getStaticPaths() {
-  const posts = await getAllPosts();
-  const tags = new Map<string, number>();
+  const posts = await getCollection("posts");
+  const tagCounts = new Map<string, number>();
   posts.forEach((post) =>
-    post.tags.forEach((tag) => {
-      tags.set(tag.name, (tags.get(tag.name) || 0) + 1);
+    post.data.tags.forEach((tag) => {
+      tagCounts.set(tag.name, (tagCounts.get(tag.name) || 0) + 1);
     }),
   );
 
-  return Array.from(tags).flatMap(([name, count]) => {
-    const pageCount = Math.ceil(count / (config.postsPerPage || 20));
+  const pageSize = config.postsPerPage ?? 20;
+  return Array.from(tagCounts).flatMap(([name, count]) => {
+    const pageCount = Math.max(1, Math.ceil(count / pageSize));
     return Array.from({ length: pageCount }, (_, i) => ({
       params: { tag: name, page: (i + 1).toString() },
     }));
@@ -23,9 +30,15 @@ export async function getStaticPaths() {
 }
 
 const { page, tag } = Astro.params;
-const { database, totalPages, currentPage, posts } = await listPosts(
+const filtered = sortPostsByDate(
+  (await getCollection("posts")).filter((p) =>
+    p.data.tags.some((t) => t.name === tag),
+  ),
+);
+const database = await getDatabase();
+const { posts, totalPages, currentPage } = paginate(
+  filtered,
   parseInt(page, 10) || 1,
-  (post) => post.tags.some((t) => t.name === tag),
 );
 ---
 
@@ -40,7 +53,7 @@ const { database, totalPages, currentPage, posts } = await listPosts(
           {tag} - Page {currentPage} of {totalPages}
         </p>
       </header>
-      <PostList posts={posts} />
+      <PostList posts={posts.map((p) => p.data)} />
       <Pagination page={currentPage} pageCount={totalPages} base={`/tags/${tag}`} />
     </article>
   </main>

@@ -1,22 +1,31 @@
 ---
+import { getCollection } from "astro:content";
+
 import Pagination from "../../../components/Pagination.astro";
 import PostList from "../../../components/PostList.astro";
 import config from "../../../config";
 import Layout from "../../../layouts/Layout.astro";
-import { listPosts, getAllTags } from "../../../notion";
+import {
+  getAllTags,
+  getDatabase,
+  paginate,
+  sortPostsByDate,
+} from "@astrotion/astro/content";
 
 export async function getStaticPaths() {
-  const tags = await getAllTags();
-  return Array.from(tags).map((tag) => ({
-    params: { tag },
-  }));
+  const posts = await getCollection("posts");
+  const tags = getAllTags(posts);
+  return tags.map((tag) => ({ params: { tag } }));
 }
 
 const { tag } = Astro.params;
-const { database, totalPages, currentPage, posts } = await listPosts(
-  1,
-  (post) => post.tags.some((t) => t.name === tag),
+const filtered = sortPostsByDate(
+  (await getCollection("posts")).filter((p) =>
+    p.data.tags.some((t) => t.name === tag),
+  ),
 );
+const database = await getDatabase();
+const { posts, totalPages, currentPage } = paginate(filtered, 1);
 ---
 
 <Layout rssUrl=`/tags/${tag}/rss.xml`>
@@ -30,7 +39,7 @@ const { database, totalPages, currentPage, posts } = await listPosts(
           {tag}
         </p>
       </header>
-      <PostList posts={posts} />
+      <PostList posts={posts.map((p) => p.data)} />
       <Pagination page={currentPage} pageCount={totalPages} base={`/tag/${tag}`} />
     </article>
   </main>

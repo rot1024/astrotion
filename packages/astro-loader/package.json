@@ -1,0 +1,37 @@
+{
+  "name": "@astrotion/loader",
+  "version": "0.0.1",
+  "description": "Astro Content Layer loader for Notion databases, powered by notiondown.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0",
+    "notiondown": "^0.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "astro": "^5.15.3",
+    "notiondown": "^0.4.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
+}

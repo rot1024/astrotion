@@ -6,7 +6,7 @@ import "katex/dist/katex.min.css";
 import Nav from "../components/Nav.astro";
 import config from "../config";
 import { PUBLIC_GA_TRACKING_ID } from "../constants";
-import { client } from "../notion";
+import { getDatabase } from "@astrotion/astro/content";
 import { getUrl } from "../utils";
 import '../styles/global.css'
 
@@ -28,7 +28,7 @@ const {
   database: dbProp,
 } = Astro.props;
 
-const database = dbProp ?? await client.getDatabase();
+const database = dbProp ?? await getDatabase();
 const siteTitle = title
   ? `${title}${config.head?.titleSeparator || " | "}${database.title}`
   : database.title;

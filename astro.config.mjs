@@ -1,9 +1,9 @@
 import sitemap from "@astrojs/sitemap";
+import { astrotion } from "@astrotion/astro";
 import { defineConfig } from "astro/config";
 import robotsTxt from "astro-robots-txt";
 
 import { BASE_PATH, CUSTOM_DOMAIN } from "./src/constants";
-import astrotion from "./src/integrations";
 
 import tailwindcss from "@tailwindcss/vite";
 

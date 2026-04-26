@@ -3,12 +3,12 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 import type { APIRoute, GetStaticPaths } from "astro";
+import { getCollection } from "astro:content";
 import { defaultFonts, generate } from "ezog";
 import sharp from "sharp";
 
 import config from "../../config";
 import { CACHE_DIR } from "../../constants";
-import { getAllPosts, getPostOnly } from "../../notion";
 
 const fonts = defaultFonts(700);
 const ogBaseBuffer = await fs.promises
@@ -52,13 +52,16 @@ export type Props = {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = await getAllPosts();
-  return posts.map((p) => ({ params: { slug: p.slug } })) ?? [];
+  const posts = await getCollection("posts");
+  return posts.map((p) => ({ params: { slug: p.data.slug } })) ?? [];
 };
 
 export const GET: APIRoute<Props> = async ({ params }) => {
-  const post = await getPostOnly(params.slug || "");
-  if (!post) throw new Error("Post not found");
+  const slug = params.slug || "";
+  const posts = await getCollection("posts");
+  const entry = posts.find((p) => p.data.slug === slug);
+  if (!entry) throw new Error("Post not found");
+  const post = entry.data;
 
   // Generate cache key hash based on post title, base image, and configuration
   // All inputs are hashed together to create a unique cache filename

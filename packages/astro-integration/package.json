@@ -1,0 +1,53 @@
+{
+  "name": "@astrotion/astro",
+  "version": "0.0.1",
+  "description": "Astro integration for astrotion: Notion content + image optimization + KaTeX wiring.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./content": {
+      "types": "./dist/content.d.ts",
+      "import": "./dist/content.js",
+      "require": "./dist/content.cjs"
+    },
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.js",
+      "require": "./dist/runtime.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@astrotion/loader": "0.0.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0"
+  },
+  "peerDependencies": {
+    "astro": "^5.0.0",
+    "katex": "^0.16.0",
+    "notiondown": "^0.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "astro": "^5.15.3",
+    "notiondown": "^0.4.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
+}

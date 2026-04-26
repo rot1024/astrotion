@@ -1,17 +1,29 @@
 ---
-import type { Post } from "notiondown";
+import type { ImageMetadata } from "astro";
 
 import Card from "../components/Card.astro";
 import { formatPostDate, postUrl } from "../utils";
 
+export type PostListItem = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  featuredImage?: ImageMetadata | string;
+  cover?: ImageMetadata | string;
+  date: string;
+};
+
 export type Props = {
-  posts: Post[];
+  posts: PostListItem[];
   page?: number;
   pageSize?: number;
   total?: number;
 };
 
 const { posts } = Astro.props;
+
+const toUrl = (v: ImageMetadata | string | undefined) =>
+  typeof v === "string" ? v : v?.src;
 ---
 
 <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-8">
@@ -21,7 +33,9 @@ const { posts } = Astro.props;
         href={postUrl(p.slug)}
         title={p.title}
         body={p.excerpt}
-        image={p.featuredImage || p.cover || postUrl(p.slug + ".webp")}
+        image={
+          toUrl(p.featuredImage) || toUrl(p.cover) || postUrl(p.slug + ".webp")
+        }
         date={formatPostDate(p.date)}
       />
     ))

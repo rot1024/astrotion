@@ -1,20 +1,25 @@
 ---
+import { getCollection } from "astro:content";
+
 import Pagination from "../../components/Pagination.astro";
 import PostList from "../../components/PostList.astro";
 import config from "../../config";
 import Layout from "../../layouts/Layout.astro";
-import { listPosts } from "../../notion";
+import { getDatabase, paginate, sortPostsByDate } from "@astrotion/astro/content";
 
 export async function getStaticPaths() {
-  const { pageSize } = await listPosts(1);
-
-  return Array.from({ length: pageSize }, (_, i) => ({
+  const all = await getCollection("posts");
+  const { totalPages } = paginate(all, 1);
+  return Array.from({ length: totalPages }, (_, i) => ({
     params: { page: (i + 1).toString() },
   }));
 }
 
 const { page } = Astro.params;
-const { database, totalPages, currentPage, posts } = await listPosts(
+const allPosts = sortPostsByDate(await getCollection("posts"));
+const database = await getDatabase();
+const { posts, totalPages, currentPage } = paginate(
+  allPosts,
   parseInt(page, 10) || 1,
 );
 ---
@@ -30,7 +35,7 @@ const { database, totalPages, currentPage, posts } = await listPosts(
           Page {currentPage} of {totalPages}
         </p>
       </header>
-      <PostList posts={posts} />
+      <PostList posts={posts.map((p) => p.data)} />
       <Pagination page={currentPage} pageCount={totalPages} />
     </article>
   </main>
