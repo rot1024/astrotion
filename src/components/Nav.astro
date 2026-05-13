@@ -1,6 +1,4 @@
 ---
-import { type Database } from "notiondown";
-
 import config from "../config";
 import { getUrl } from "../utils";
 
@@ -17,8 +15,7 @@ const { title } = Astro.props;
   >
     <a
       href={getUrl("/")}
-      class:list={["text-xl title", config.nav?.titleClasses]}
-      >{title}</a
+      class:list={["text-xl title", config.nav?.titleClasses]}>{title}</a
     >
   </div>
 </nav>

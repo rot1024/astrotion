@@ -41,7 +41,11 @@ const { database, totalPages, currentPage, posts } = await listPosts(
         </p>
       </header>
       <PostList posts={posts} />
-      <Pagination page={currentPage} pageCount={totalPages} base={`/tags/${tag}`} />
+      <Pagination
+        page={currentPage}
+        pageCount={totalPages}
+        base={`/tags/${tag}`}
+      />
     </article>
   </main>
 </Layout>

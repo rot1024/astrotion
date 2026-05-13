@@ -1,4 +1,9 @@
-import { Client, downloadImages, downloadImagesWithRetry, type Post } from "notiondown";
+import {
+  Client,
+  downloadImages,
+  downloadImagesWithRetry,
+  type Post,
+} from "notiondown";
 
 import config, { auth, dataSourceId, debug } from "./config";
 import { ASSET_DIR, CACHE_DIR_ASSETS, CACHE_DIR_NOTION } from "./constants";
@@ -7,7 +12,9 @@ import { postUrl } from "./utils";
 const pageSize = config.postsPerPage ?? 20;
 
 if (!auth || !dataSourceId) {
-  throw new Error("NOTION_API_SECRET and DATA_SOURCE_ID environment variables must be set.");
+  throw new Error(
+    "NOTION_API_SECRET and DATA_SOURCE_ID environment variables must be set.",
+  );
 }
 
 const client = new Client({
@@ -27,7 +34,7 @@ export async function getAllTags() {
   const tags = new Set<string>();
   for (const post of posts) {
     if (post.tags) {
-      post.tags.filter(t => t.name).forEach(t => tags.add(t.name));
+      post.tags.filter((t) => t.name).forEach((t) => tags.add(t.name));
     }
   }
   return Array.from(tags).sort();
@@ -85,7 +92,7 @@ export async function getPost(slug: string) {
     post,
     database,
     html: content.html,
-  }
+  };
 }
 
 export function getAllPosts() {
@@ -96,8 +103,12 @@ export function getDatabaseAndAllPosts() {
   return client.getDatabaseAndAllPosts();
 }
 
-export async function donwloadImages(images: Map<string, string> | Record<string, string> | null | undefined, postId?: string) {
-  const imageMap = images instanceof Map ? images : new Map(Object.entries(images || {}));
+export async function donwloadImages(
+  images: Map<string, string> | Record<string, string> | null | undefined,
+  postId?: string,
+) {
+  const imageMap =
+    images instanceof Map ? images : new Map(Object.entries(images || {}));
   if (imageMap.size === 0) return;
 
   if (!postId) {
@@ -118,10 +129,15 @@ export async function donwloadPostImages(posts: Post[]) {
   for (const post of posts) {
     if (!post.images || Object.keys(post.images).length === 0) return;
 
-    await downloadImagesWithRetry(new Map(Object.entries(post.images)), post.id, client, {
-      debug,
-      dir: CACHE_DIR_ASSETS,
-    });
+    await downloadImagesWithRetry(
+      new Map(Object.entries(post.images)),
+      post.id,
+      client,
+      {
+        debug,
+        dir: CACHE_DIR_ASSETS,
+      },
+    );
   }
 }
 

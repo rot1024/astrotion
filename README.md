@@ -81,6 +81,7 @@ After publishing a new post in Notion, you need to trigger a new deployment. You
 **For Cloudflare Workers:**
 
 Set the following secrets in your GitHub repository settings:
+
 - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token
 - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
 - `NOTION_API_SECRET`: Your Notion integration token

@@ -39,9 +39,11 @@
   "devDependencies": {
     "@types/katex": "^0.16.7",
     "@types/node": "^24.10.0",
+    "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^9.39.1",
     "eslint-config-reearth": "^0.3.8",
     "eslint-plugin-astro": "^1.5.0",
+    "globals": "^17.6.0",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "symlink-dir": "^9.0.0",

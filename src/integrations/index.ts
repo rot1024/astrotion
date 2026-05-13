@@ -61,10 +61,15 @@ async function createPublicSymlink() {
 
   // Create symlink using symlink-dir for cross-platform support
   // Use relative path from public directory to the cache directory
-  const relativePath = path.relative(path.dirname(publicAssetDir), CACHE_DIR_ASSETS);
+  const relativePath = path.relative(
+    path.dirname(publicAssetDir),
+    CACHE_DIR_ASSETS,
+  );
   try {
     await symlinkDir(relativePath, publicAssetDir);
-    console.log(`astrotion: created symlink ${publicAssetDir} -> ${relativePath}`);
+    console.log(
+      `astrotion: created symlink ${publicAssetDir} -> ${relativePath}`,
+    );
   } catch (error) {
     console.error(`astrotion: failed to create symlink:`, error);
     throw error;

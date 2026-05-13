@@ -18,7 +18,13 @@ export async function getStaticPaths() {
   }));
 }
 
-export async function GET({ params, site: ctxsite }: { params: { tag: string }, site: string }) {
+export async function GET({
+  params,
+  site: ctxsite,
+}: {
+  params: { tag: string };
+  site: string;
+}) {
   const { database, posts } = await getDatabaseAndAllPosts();
 
   return rss({

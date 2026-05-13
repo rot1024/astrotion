@@ -1,11 +1,30 @@
+import tsParser from "@typescript-eslint/parser";
 import configs from "eslint-config-reearth";
 import eslintPluginAstro from "eslint-plugin-astro";
+import globals from "globals";
 
 export default [
-  ...configs,
-  ...eslintPluginAstro.configs.recommended,
+  ...configs("astrotion"),
+  ...eslintPluginAstro.configs["flat/recommended"],
   {
-    ignores: ["dist/*"],
+    files: ["**/*.astro"],
+    languageOptions: {
+      parserOptions: {
+        parser: tsParser,
+        extraFileExtensions: [".astro"],
+      },
+    },
+  },
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,astro}"],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+  {
+    ignores: ["dist/*", ".astro/*"],
   },
   {
     rules: {

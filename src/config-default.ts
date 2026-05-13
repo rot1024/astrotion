@@ -88,18 +88,18 @@ const config: Config = {
     filter: {
       published: {
         enabled: true,
-        value: true
+        value: true,
       },
       date: {
         enabled: true,
         operator: "on_or_before",
-        value: "now"
-      }
+        value: "now",
+      },
     },
     md2html: {
       shikiTheme: "github-light",
-    }
-  }
+    },
+  },
 };
 
 export default config;
